@@ -1,0 +1,14 @@
+{
+  "type": "forge:add_spawns",
+  "biomes": [
+    "crimson_forest",
+    "warped_forest",
+    "nether_wastes"
+  ],
+  "spawners": {
+    "type": "elementals:fire_golem",
+    "weight": 20,
+    "minCount": 4,
+    "maxCount": 4
+  }
+}

@@ -1,0 +1,787 @@
+{
+  "mod_elements": [
+    {
+      "name": "SetupAnimations",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "setup_animations",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/SetupAnimationsProcedure.java"
+        ],
+        "dependencies": []
+      }
+    },
+    {
+      "name": "FireSignatureWhileProjectileFlyingTick",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_signature_while_projectile_flying_tick",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/FireSignatureWhileProjectileFlyingTickProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Spells/Fire/Signature"
+    },
+    {
+      "name": "FireSignatureProjectileHitsBlock",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_signature_projectile_hits_block",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/FireSignatureProjectileHitsBlockProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Spells/Fire/Signature"
+    },
+    {
+      "name": "FireSignature",
+      "type": "projectile",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_signature",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/entity/FireSignatureEntity.java"
+        ]
+      },
+      "path": "~/Spells/Fire/Signature"
+    },
+    {
+      "name": "SignatureAbilityOnKeyPressed",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "signature_ability_on_key_pressed",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/SignatureAbilityOnKeyPressedProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Mechanics/Fire"
+    },
+    {
+      "name": "SignatureAbility",
+      "type": "keybind",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "signature_ability",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/network/SignatureAbilityMessage.java"
+        ]
+      },
+      "path": "~/Mechanics/Fire"
+    },
+    {
+      "name": "FireSignatureProjectileHitsPlayer",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_signature_projectile_hits_player",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/FireSignatureProjectileHitsPlayerProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "sourceentity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Spells/Fire/Signature"
+    },
+    {
+      "name": "MainOverlay",
+      "type": "overlay",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "main_overlay",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/client/screens/MainOverlayOverlay.java"
+        ]
+      },
+      "path": "~/Overlays"
+    },
+    {
+      "name": "IsFireCdrZero",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_fire_cdr_zero",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsFireCdrZeroProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "IsFireCdrOne",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_fire_cdr_one",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsFireCdrOneProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "IsFireCdrTwo",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_fire_cdr_two",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsFireCdrTwoProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "IsFireNoCdr",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_fire_no_cdr",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsFireNoCdrProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "FireElementFoodPlayerFinishesUsingItem",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_element_food_player_finishes_using_item",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/FireElementFoodPlayerFinishesUsingItemProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Items"
+    },
+    {
+      "name": "FireElementFood",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_element_food",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/item/FireElementFoodItem.java",
+          "src/main/resources/assets/elementals/models/item/fire_element_food.json"
+        ]
+      },
+      "path": "~/Items"
+    },
+    {
+      "name": "FireGolem",
+      "type": "animatedentity",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_golem",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/client/renderer/FireGolemRenderer.java",
+          "src/main/java/com/naizo/elementals/entity/model/FireGolemModel.java",
+          "src/main/java/com/naizo/elementals/entity/FireGolemEntity.java",
+          "src/main/resources/data/elementals/forge/biome_modifier/fire_golem_biome_modifier.json",
+          "src/main/resources/assets/elementals/models/item/fire_golem_spawn_egg.json"
+        ]
+      },
+      "path": "~/Entities/Firegolem"
+    },
+    {
+      "name": "SyncAnimation",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "sync_animation",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/SyncAnimationProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "sourceentity",
+            "type": "entity"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Entities/Firegolem"
+    },
+    {
+      "name": "FireGolemOnEntityTickUpdate",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_golem_on_entity_tick_update",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/FireGolemOnEntityTickUpdateProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Entities/Firegolem"
+    },
+    {
+      "name": "FireElementFoodRecipe",
+      "type": "recipe",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_element_food_recipe",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/elementals/recipes/fire_element_food_recipe.json"
+        ]
+      },
+      "path": "~/Items"
+    },
+    {
+      "name": "FireRune",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_rune",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/elementals/models/item/fire_rune.json",
+          "src/main/java/com/naizo/elementals/item/FireRuneItem.java"
+        ]
+      },
+      "path": "~/Items"
+    },
+    {
+      "name": "FireRuneDrop",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "fire_rune_drop",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/FireRuneDropProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Entities/Firegolem"
+    },
+    {
+      "name": "ExplosiveFireOrbProjectileHitsBlock",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "explosive_fire_orb_projectile_hits_block",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/ExplosiveFireOrbProjectileHitsBlockProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Spells/Fire/ExplosiveOrb"
+    },
+    {
+      "name": "ExplosiveFireOrb",
+      "type": "projectile",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "explosive_fire_orb",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/entity/ExplosiveFireOrbEntity.java"
+        ]
+      },
+      "path": "~/Spells/Fire/ExplosiveOrb"
+    },
+    {
+      "name": "ExplosiveOrbSpellBookRightclicked",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "explosive_orb_spell_book_rightclicked",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/ExplosiveOrbSpellBookRightclickedProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "itemstack",
+            "type": "itemstack"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Spells/Fire/ExplosiveOrb"
+    },
+    {
+      "name": "ExplosiveOrbSpellBook",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "explosive_orb_spell_book",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/item/ExplosiveOrbSpellBookItem.java",
+          "src/main/resources/assets/elementals/models/item/explosive_orb_spell_book.json"
+        ]
+      },
+      "path": "~/Spells/Fire/ExplosiveOrb"
+    },
+    {
+      "name": "EmberFireShieldSpellBook",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "ember_fire_shield_spell_book",
+      "metadata": {
+        "files": [
+          "src/main/resources/assets/elementals/models/item/ember_fire_shield_spell_book.json",
+          "src/main/java/com/naizo/elementals/item/EmberFireShieldSpellBookItem.java"
+        ]
+      },
+      "path": "~/Spells/Fire/Ember Shield"
+    },
+    {
+      "name": "EmberShieldSpellBookOnRightClick",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "ember_shield_spell_book_on_right_click",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/EmberShieldSpellBookOnRightClickProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "itemstack",
+            "type": "itemstack"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Spells/Fire/Ember Shield"
+    },
+    {
+      "name": "HandleElementalLogic",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "handle_elemental_logic",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/HandleElementalLogicProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Mechanics"
+    },
+    {
+      "name": "InfernoWaveSpellBook",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "inferno_wave_spell_book",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/item/InfernoWaveSpellBookItem.java",
+          "src/main/resources/assets/elementals/models/item/inferno_wave_spell_book.json"
+        ]
+      },
+      "path": "~/Spells/Fire/Inferno Wave"
+    },
+    {
+      "name": "InfernoWaveSpellOnRightClick",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "inferno_wave_spell_on_right_click",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/InfernoWaveSpellOnRightClickProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "itemstack",
+            "type": "itemstack"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Spells/Fire/Inferno Wave"
+    },
+    {
+      "name": "SpellsTrade",
+      "type": "villagertrade",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "spells_trade",
+      "metadata": {
+        "files": []
+      },
+      "path": "~/Spells"
+    }
+  ],
+  "variable_elements": [
+    {
+      "name": "element",
+      "type": "number",
+      "scope": "player_persistent",
+      "value": "0"
+    }
+  ],
+  "sound_elements": [],
+  "tag_elements": {},
+  "tab_element_order": {},
+  "language_map": {
+    "en_us": {
+      "item.elementals.fire_element_food": "Fire Element Food",
+      "entity.elementals.fire_golem": "Fire Golem",
+      "item.elementals.fire_golem_spawn_egg": "Fire Golem Spawn Egg",
+      "item.elementals.explosive_orb_spell_book.description_0": "§6Explosive Orb",
+      "item.elementals.fire_rune": "Fire Rune",
+      "item.elementals.inferno_wave_spell_book.description_0": "§6InfernoWave",
+      "item.elementals.ember_fire_shield_spell_book": "Spell Book",
+      "item.elementals.explosive_orb_spell_book": "Spell Book",
+      "item.elementals.ember_fire_shield_spell_book.description_0": "§6Ember Shield",
+      "key.elementals.signature_ability": "Use Signature Ability",
+      "item.elementals.inferno_wave_spell_book": "Spell Book"
+    }
+  },
+  "foldersRoot": {
+    "name": "~",
+    "children": [
+      {
+        "name": "Spells",
+        "children": [
+          {
+            "name": "Fire",
+            "children": [
+              {
+                "name": "Signature",
+                "children": []
+              },
+              {
+                "name": "ExplosiveOrb",
+                "children": []
+              },
+              {
+                "name": "Ember Shield",
+                "children": []
+              },
+              {
+                "name": "Inferno Wave",
+                "children": []
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Mechanics",
+        "children": [
+          {
+            "name": "Fire",
+            "children": []
+          }
+        ]
+      },
+      {
+        "name": "Overlays",
+        "children": []
+      },
+      {
+        "name": "Logic",
+        "children": []
+      },
+      {
+        "name": "Items",
+        "children": []
+      },
+      {
+        "name": "Entities",
+        "children": [
+          {
+            "name": "Firegolem",
+            "children": []
+          }
+        ]
+      }
+    ]
+  },
+  "workspaceSettings": {
+    "modid": "elementals",
+    "modName": "Elementals",
+    "version": "1.1.0",
+    "author": "NAIZO",
+    "websiteURL": "https://meehrbensalem.github.io",
+    "license": "All Rights Reserved",
+    "serverSideOnly": false,
+    "modPicture": "fire_book",
+    "requiredMods": [],
+    "dependencies": [],
+    "dependants": [],
+    "mcreatorDependencies": [
+      "geckolib",
+      "playeranimator"
+    ],
+    "currentGenerator": "forge-1.20.1",
+    "credits": "no credits",
+    "modElementsPackage": "com.naizo.elementals"
+  },
+  "mcreatorVersion": 202400452410
+}

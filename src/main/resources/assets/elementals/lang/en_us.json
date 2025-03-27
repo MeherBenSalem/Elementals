@@ -1,0 +1,13 @@
+{
+  "item.elementals.fire_element_food": "Fire Element Food",
+  "entity.elementals.fire_golem": "Fire Golem",
+  "item.elementals.fire_golem_spawn_egg": "Fire Golem Spawn Egg",
+  "item.elementals.explosive_orb_spell_book.description_0": "§6Explosive Orb",
+  "item.elementals.fire_rune": "Fire Rune",
+  "item.elementals.inferno_wave_spell_book.description_0": "§6InfernoWave",
+  "item.elementals.ember_fire_shield_spell_book": "Spell Book",
+  "item.elementals.explosive_orb_spell_book": "Spell Book",
+  "item.elementals.ember_fire_shield_spell_book.description_0": "§6Ember Shield",
+  "key.elementals.signature_ability": "Use Signature Ability",
+  "item.elementals.inferno_wave_spell_book": "Spell Book"
+}

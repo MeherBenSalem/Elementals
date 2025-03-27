@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ab",
+    "cd"
+  ],
+  "key": {
+    "a": {
+      "item": "minecraft:quartz"
+    },
+    "b": {
+      "item": "minecraft:wheat_seeds"
+    },
+    "c": {
+      "item": "elementals:fire_rune"
+    },
+    "d": {
+      "item": "minecraft:blaze_rod"
+    }
+  },
+  "result": {
+    "item": "elementals:fire_element_food",
+    "count": 1
+  }
+}
