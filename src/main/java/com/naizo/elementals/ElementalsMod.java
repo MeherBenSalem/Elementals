@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.AbstractMap;
 
 import com.naizo.elementals.init.ElementalsModTabs;
+import com.naizo.elementals.init.ElementalsModMobEffects;
 import com.naizo.elementals.init.ElementalsModItems;
 import com.naizo.elementals.init.ElementalsModEntities;
 
@@ -45,6 +46,8 @@ public class ElementalsMod {
 		ElementalsModEntities.REGISTRY.register(bus);
 
 		ElementalsModTabs.REGISTRY.register(bus);
+
+		ElementalsModMobEffects.REGISTRY.register(bus);
 
 		// Start of user code block mod init
 		// End of user code block mod init

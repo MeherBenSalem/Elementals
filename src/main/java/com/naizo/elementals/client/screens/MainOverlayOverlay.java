@@ -15,6 +15,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.Minecraft;
 
+import com.naizo.elementals.procedures.ReturnElementalLevelProcedure;
+import com.naizo.elementals.procedures.IsWaterNoCdrProcedure;
+import com.naizo.elementals.procedures.IsWaterCdrZeroProcedure;
+import com.naizo.elementals.procedures.IsWaterCdrTwoProcedure;
+import com.naizo.elementals.procedures.IsWaterCdrOneProcedure;
 import com.naizo.elementals.procedures.IsFireNoCdrProcedure;
 import com.naizo.elementals.procedures.IsFireCdrZeroProcedure;
 import com.naizo.elementals.procedures.IsFireCdrTwoProcedure;
@@ -48,17 +53,32 @@ public class MainOverlayOverlay {
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		if (true) {
 			if (IsFireCdrZeroProcedure.execute(entity)) {
-				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire_0.png"), 3, h - 14, 0, 0, 11, 11, 11, 11);
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire_0.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
 			}
 			if (IsFireCdrOneProcedure.execute(entity)) {
-				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire_1.png"), 3, h - 14, 0, 0, 11, 11, 11, 11);
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire_1.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
 			}
 			if (IsFireCdrTwoProcedure.execute(entity)) {
-				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire_2.png"), 3, h - 14, 0, 0, 11, 11, 11, 11);
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire_2.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
 			}
 			if (IsFireNoCdrProcedure.execute(entity)) {
-				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire.png"), 3, h - 14, 0, 0, 11, 11, 11, 11);
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/fire.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
 			}
+			if (IsWaterCdrZeroProcedure.execute(entity)) {
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/water_0.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
+			}
+			if (IsWaterCdrOneProcedure.execute(entity)) {
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/water_1.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
+			}
+			if (IsWaterCdrTwoProcedure.execute(entity)) {
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/water_2.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
+			}
+			if (IsWaterNoCdrProcedure.execute(entity)) {
+				event.getGuiGraphics().blit(new ResourceLocation("elementals:textures/screens/water.png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
+			}
+			event.getGuiGraphics().drawString(Minecraft.getInstance().font,
+
+					ReturnElementalLevelProcedure.execute(entity), 10, h - 15, -1, false);
 		}
 		RenderSystem.depthMask(true);
 		RenderSystem.defaultBlendFunc();

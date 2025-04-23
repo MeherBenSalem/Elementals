@@ -125,7 +125,7 @@
           }
         ]
       },
-      "path": "~/Mechanics/Fire"
+      "path": "~/Mechanics/SignatureAbility"
     },
     {
       "name": "SignatureAbility",
@@ -138,7 +138,7 @@
           "src/main/java/com/naizo/elementals/network/SignatureAbilityMessage.java"
         ]
       },
-      "path": "~/Mechanics/Fire"
+      "path": "~/Mechanics/SignatureAbility"
     },
     {
       "name": "FireSignatureProjectileHitsPlayer",
@@ -270,10 +270,26 @@
           {
             "name": "entity",
             "type": "entity"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
           }
         ]
       },
-      "path": "~/Items"
+      "path": "~/Items/Fire"
     },
     {
       "name": "FireElementFood",
@@ -287,7 +303,7 @@
           "src/main/resources/assets/elementals/models/item/fire_element_food.json"
         ]
       },
-      "path": "~/Items"
+      "path": "~/Items/Fire"
     },
     {
       "name": "FireGolem",
@@ -387,7 +403,7 @@
           "src/main/resources/data/elementals/recipes/fire_element_food_recipe.json"
         ]
       },
-      "path": "~/Items"
+      "path": "~/Items/Fire"
     },
     {
       "name": "FireRune",
@@ -401,7 +417,7 @@
           "src/main/java/com/naizo/elementals/item/FireRuneItem.java"
         ]
       },
-      "path": "~/Items"
+      "path": "~/Items/Fire"
     },
     {
       "name": "FireRuneDrop",
@@ -674,11 +690,236 @@
         "files": []
       },
       "path": "~/Spells"
+    },
+    {
+      "name": "HandleElementalXpLevelUp",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "handle_elemental_xp_level_up",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/HandleElementalXpLevelUpProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "xp",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Mechanics"
+    },
+    {
+      "name": "ReturnElementalLevel",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "return_elemental_level",
+      "metadata": {
+        "return_type": "string",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/ReturnElementalLevelProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Overlays"
+    },
+    {
+      "name": "MainConfig",
+      "type": "config",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "main_config",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/configuration/MainConfigConfiguration.java"
+        ]
+      }
+    },
+    {
+      "name": "IsWaterCdrZero",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_water_cdr_zero",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsWaterCdrZeroProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "IsWaterCdrOne",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_water_cdr_one",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsWaterCdrOneProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "IsWaterCdrTwo",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_water_cdr_two",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsWaterCdrTwoProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "IsWaterNoCdr",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "is_water_no_cdr",
+      "metadata": {
+        "return_type": "logic",
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/IsWaterNoCdrProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          }
+        ]
+      },
+      "path": "~/Logic"
+    },
+    {
+      "name": "TidebinderEffect",
+      "type": "potioneffect",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "tidebinder_effect",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/potion/TidebinderEffectMobEffect.java"
+        ]
+      },
+      "path": "~/Spells/Water/Signature"
+    },
+    {
+      "name": "WaterElementFood",
+      "type": "item",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "water_element_food",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/item/WaterElementFoodItem.java",
+          "src/main/resources/assets/elementals/models/item/water_element_food.json"
+        ]
+      },
+      "path": "~/Items/Water"
+    },
+    {
+      "name": "WaterElementFoodProcedure",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "water_element_food_procedure",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/WaterElementFoodProcedureProcedure.java"
+        ],
+        "dependencies": [
+          {
+            "name": "entity",
+            "type": "entity"
+          },
+          {
+            "name": "x",
+            "type": "number"
+          },
+          {
+            "name": "y",
+            "type": "number"
+          },
+          {
+            "name": "z",
+            "type": "number"
+          },
+          {
+            "name": "world",
+            "type": "world"
+          }
+        ]
+      },
+      "path": "~/Items/Water"
     }
   ],
   "variable_elements": [
     {
       "name": "element",
+      "type": "number",
+      "scope": "player_persistent",
+      "value": "0"
+    },
+    {
+      "name": "elementalLevel",
+      "type": "number",
+      "scope": "player_persistent",
+      "value": "0"
+    },
+    {
+      "name": "elementalExp",
       "type": "number",
       "scope": "player_persistent",
       "value": "0"
@@ -689,17 +930,21 @@
   "tab_element_order": {},
   "language_map": {
     "en_us": {
-      "item.elementals.fire_element_food": "Fire Element Food",
       "entity.elementals.fire_golem": "Fire Golem",
       "item.elementals.fire_golem_spawn_egg": "Fire Golem Spawn Egg",
       "item.elementals.explosive_orb_spell_book.description_0": "§6Explosive Orb",
+      "item.elementals.ember_fire_shield_spell_book": "Spell Book",
+      "item.elementals.fire_element_food": "Fire Seed",
       "item.elementals.fire_rune": "Fire Rune",
       "item.elementals.inferno_wave_spell_book.description_0": "§6InfernoWave",
-      "item.elementals.ember_fire_shield_spell_book": "Spell Book",
+      "item.elementals.inferno_wave_spell_book.description_1": "Requires Fire Level : 2",
+      "effect.elementals.tidebinder_effect": "Tidebinder",
       "item.elementals.explosive_orb_spell_book": "Spell Book",
       "item.elementals.ember_fire_shield_spell_book.description_0": "§6Ember Shield",
       "key.elementals.signature_ability": "Use Signature Ability",
-      "item.elementals.inferno_wave_spell_book": "Spell Book"
+      "item.elementals.inferno_wave_spell_book": "Spell Book",
+      "item.elementals.ember_fire_shield_spell_book.description_1": "Requires Fire Level : 1",
+      "item.elementals.water_element_food": "Water Seed"
     }
   },
   "foldersRoot": {
@@ -728,6 +973,19 @@
                 "children": []
               }
             ]
+          },
+          {
+            "name": "Water",
+            "children": [
+              {
+                "name": "WaterPrison",
+                "children": []
+              },
+              {
+                "name": "Signature",
+                "children": []
+              }
+            ]
           }
         ]
       },
@@ -735,7 +993,7 @@
         "name": "Mechanics",
         "children": [
           {
-            "name": "Fire",
+            "name": "SignatureAbility",
             "children": []
           }
         ]
@@ -750,7 +1008,16 @@
       },
       {
         "name": "Items",
-        "children": []
+        "children": [
+          {
+            "name": "Water",
+            "children": []
+          },
+          {
+            "name": "Fire",
+            "children": []
+          }
+        ]
       },
       {
         "name": "Entities",
@@ -766,9 +1033,9 @@
   "workspaceSettings": {
     "modid": "elementals",
     "modName": "Elementals",
-    "version": "1.1.0",
+    "version": "1.1.0a",
     "author": "NAIZO",
-    "websiteURL": "https://meehrbensalem.github.io",
+    "websiteURL": "https://meherbensalem.github.io",
     "license": "All Rights Reserved",
     "serverSideOnly": false,
     "modPicture": "fire_book",

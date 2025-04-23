@@ -30,7 +30,8 @@
     "damageVsEntity": 0.0,
     "specialInformation": {
       "fixedValue": [
-        "§6InfernoWave"
+        "§6InfernoWave",
+        "Requires Fire Level : 2"
       ]
     },
     "glowCondition": {

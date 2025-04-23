@@ -21,7 +21,7 @@ public class FireElementFoodItem extends Item {
 		double x = entity.getX();
 		double y = entity.getY();
 		double z = entity.getZ();
-		FireElementFoodPlayerFinishesUsingItemProcedure.execute(entity);
+		FireElementFoodPlayerFinishesUsingItemProcedure.execute(world, x, y, z, entity);
 		return retval;
 	}
 }

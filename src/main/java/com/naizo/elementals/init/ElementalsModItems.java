@@ -11,6 +11,7 @@ import net.minecraftforge.common.ForgeSpawnEggItem;
 
 import net.minecraft.world.item.Item;
 
+import com.naizo.elementals.item.WaterElementFoodItem;
 import com.naizo.elementals.item.InfernoWaveSpellBookItem;
 import com.naizo.elementals.item.FireRuneItem;
 import com.naizo.elementals.item.FireElementFoodItem;
@@ -26,6 +27,7 @@ public class ElementalsModItems {
 	public static final RegistryObject<Item> EXPLOSIVE_ORB_SPELL_BOOK = REGISTRY.register("explosive_orb_spell_book", () -> new ExplosiveOrbSpellBookItem());
 	public static final RegistryObject<Item> EMBER_FIRE_SHIELD_SPELL_BOOK = REGISTRY.register("ember_fire_shield_spell_book", () -> new EmberFireShieldSpellBookItem());
 	public static final RegistryObject<Item> INFERNO_WAVE_SPELL_BOOK = REGISTRY.register("inferno_wave_spell_book", () -> new InfernoWaveSpellBookItem());
+	public static final RegistryObject<Item> WATER_ELEMENT_FOOD = REGISTRY.register("water_element_food", () -> new WaterElementFoodItem());
 	// Start of user code block custom items
 	// End of user code block custom items
 }

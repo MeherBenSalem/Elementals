@@ -30,7 +30,8 @@
     "damageVsEntity": 0.0,
     "specialInformation": {
       "fixedValue": [
-        "§6Ember Shield"
+        "§6Ember Shield",
+        "Requires Fire Level : 1"
       ]
     },
     "glowCondition": {

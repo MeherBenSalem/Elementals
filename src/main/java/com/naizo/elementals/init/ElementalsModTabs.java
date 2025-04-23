@@ -23,6 +23,7 @@ public class ElementalsModTabs {
 	public static void buildTabContentsVanilla(BuildCreativeModeTabContentsEvent tabData) {
 		if (tabData.getTabKey() == CreativeModeTabs.FOOD_AND_DRINKS) {
 			tabData.accept(ElementalsModItems.FIRE_ELEMENT_FOOD.get());
+			tabData.accept(ElementalsModItems.WATER_ELEMENT_FOOD.get());
 		} else if (tabData.getTabKey() == CreativeModeTabs.SPAWN_EGGS) {
 			tabData.accept(ElementalsModItems.FIRE_GOLEM_SPAWN_EGG.get());
 		} else if (tabData.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS) {

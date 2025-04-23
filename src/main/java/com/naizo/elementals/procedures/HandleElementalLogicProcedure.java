@@ -37,18 +37,34 @@ public class HandleElementalLogicProcedure {
 		if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).element == 1) {
 			if (entity.getRemainingFireTicks() >= 20) {
 				if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-					_entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 20, 1, false, false));
+					_entity.addEffect(
+							new MobEffectInstance(MobEffects.REGENERATION, 20, (int) (entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel, false, false));
 			}
 			if ((entity instanceof LivingEntity _livEnt && _livEnt.hasEffect(MobEffects.FIRE_RESISTANCE) ? _livEnt.getEffect(MobEffects.FIRE_RESISTANCE).getDuration() : 0) <= 20) {
 				if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-					_entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 60, 2, false, false));
+					_entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 60, (int) (entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel,
+							false, false));
 			}
 			if (entity.isInWaterRainOrBubble()) {
 				entity.hurt(new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)), 1);
 			}
-			if (entity.getPersistentData().getDouble("el_cdr") != 0) {
-				entity.getPersistentData().putDouble("el_cdr", (entity.getPersistentData().getDouble("el_cdr") - 1));
+		} else if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).element == 2) {
+			if (entity.isInWaterRainOrBubble()) {
+				if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
+					_entity.addEffect(
+							new MobEffectInstance(MobEffects.REGENERATION, 20, (int) (entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel, false, false));
+				if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel >= 1) {
+					if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
+						_entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 60, 1, false, false));
+				}
+				if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel == 2) {
+					if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
+						_entity.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 60, 1, false, false));
+				}
 			}
+		}
+		if (entity.getPersistentData().getDouble("el_cdr") != 0) {
+			entity.getPersistentData().putDouble("el_cdr", (entity.getPersistentData().getDouble("el_cdr") - 1));
 		}
 	}
 }

@@ -5,7 +5,11 @@
   "projectBrowserSplitPos": 280,
   "projectBrowserState": {
     "expandedPaths": [
-      "[, Elementals]"
+      "[, Elementals]",
+      "[, Elementals, Resources (Gradle)]",
+      "[, Elementals, Resources (Gradle), E:\\Projects\\Minecraft\\Elementals\\src\\main\\resources\\assets]",
+      "[, Elementals, Resources (Gradle), E:\\Projects\\Minecraft\\Elementals\\src\\main\\resources\\assets, E:\\Projects\\Minecraft\\Elementals\\src\\main\\resources\\assets\\elementals]",
+      "[, Elementals, Resources (Gradle), E:\\Projects\\Minecraft\\Elementals\\src\\main\\resources\\assets, E:\\Projects\\Minecraft\\Elementals\\src\\main\\resources\\assets\\elementals, E:\\Projects\\Minecraft\\Elementals\\src\\main\\resources\\assets\\elementals\\player_animation]"
     ]
   }
 }

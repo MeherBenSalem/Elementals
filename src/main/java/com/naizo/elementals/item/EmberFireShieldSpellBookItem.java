@@ -24,6 +24,7 @@ public class EmberFireShieldSpellBookItem extends Item {
 	public void appendHoverText(ItemStack itemstack, Level level, List<Component> list, TooltipFlag flag) {
 		super.appendHoverText(itemstack, level, list, flag);
 		list.add(Component.translatable("item.elementals.ember_fire_shield_spell_book.description_0"));
+		list.add(Component.translatable("item.elementals.ember_fire_shield_spell_book.description_1"));
 	}
 
 	@Override

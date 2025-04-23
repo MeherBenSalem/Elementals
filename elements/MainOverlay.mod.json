@@ -13,8 +13,8 @@
             "name": "IsFireCdrZero"
           },
           "anchorPoint": "BOTTOM_LEFT",
-          "x": 3,
-          "y": 226,
+          "x": 4,
+          "y": 219,
           "locked": true
         }
       },
@@ -27,8 +27,8 @@
             "name": "IsFireCdrOne"
           },
           "anchorPoint": "BOTTOM_LEFT",
-          "x": 3,
-          "y": 226,
+          "x": 4,
+          "y": 219,
           "locked": true
         }
       },
@@ -41,8 +41,8 @@
             "name": "IsFireCdrTwo"
           },
           "anchorPoint": "BOTTOM_LEFT",
-          "x": 3,
-          "y": 226,
+          "x": 4,
+          "y": 219,
           "locked": true
         }
       },
@@ -55,9 +55,83 @@
             "name": "IsFireNoCdr"
           },
           "anchorPoint": "BOTTOM_LEFT",
-          "x": 3,
-          "y": 226,
+          "x": 4,
+          "y": 219,
           "locked": true
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "water_0.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "IsWaterCdrZero"
+          },
+          "anchorPoint": "BOTTOM_LEFT",
+          "x": 4,
+          "y": 219,
+          "locked": true
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "water_1.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "IsWaterCdrOne"
+          },
+          "anchorPoint": "BOTTOM_LEFT",
+          "x": 4,
+          "y": 219,
+          "locked": true
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "water_2.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "IsWaterCdrTwo"
+          },
+          "anchorPoint": "BOTTOM_LEFT",
+          "x": 4,
+          "y": 219,
+          "locked": true
+        }
+      },
+      {
+        "type": "image",
+        "data": {
+          "image": "water.png",
+          "use1Xscale": false,
+          "displayCondition": {
+            "name": "IsWaterNoCdr"
+          },
+          "anchorPoint": "BOTTOM_LEFT",
+          "x": 4,
+          "y": 219,
+          "locked": true
+        }
+      },
+      {
+        "type": "label",
+        "data": {
+          "name": "label_1",
+          "text": {
+            "fixedValue": "1",
+            "name": "ReturnElementalLevel"
+          },
+          "color": {
+            "value": -1,
+            "falpha": 0.0
+          },
+          "anchorPoint": "BOTTOM_LEFT",
+          "x": 10,
+          "y": 225,
+          "locked": false
         }
       }
     ],

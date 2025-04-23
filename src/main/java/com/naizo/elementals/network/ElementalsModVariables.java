@@ -67,6 +67,8 @@ public class ElementalsModVariables {
 			PlayerVariables original = ((PlayerVariables) event.getOriginal().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()));
 			PlayerVariables clone = ((PlayerVariables) event.getEntity().getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()));
 			clone.element = original.element;
+			clone.elementalLevel = original.elementalLevel;
+			clone.elementalExp = original.elementalExp;
 			if (!event.isWasDeath()) {
 			}
 		}
@@ -104,6 +106,8 @@ public class ElementalsModVariables {
 
 	public static class PlayerVariables {
 		public double element = 0;
+		public double elementalLevel = 0;
+		public double elementalExp = 0;
 
 		public void syncPlayerVariables(Entity entity) {
 			if (entity instanceof ServerPlayer serverPlayer)
@@ -113,12 +117,16 @@ public class ElementalsModVariables {
 		public Tag writeNBT() {
 			CompoundTag nbt = new CompoundTag();
 			nbt.putDouble("element", element);
+			nbt.putDouble("elementalLevel", elementalLevel);
+			nbt.putDouble("elementalExp", elementalExp);
 			return nbt;
 		}
 
 		public void readNBT(Tag tag) {
 			CompoundTag nbt = (CompoundTag) tag;
 			element = nbt.getDouble("element");
+			elementalLevel = nbt.getDouble("elementalLevel");
+			elementalExp = nbt.getDouble("elementalExp");
 		}
 	}
 
@@ -144,6 +152,8 @@ public class ElementalsModVariables {
 				if (!context.getDirection().getReceptionSide().isServer()) {
 					PlayerVariables variables = ((PlayerVariables) Minecraft.getInstance().player.getCapability(PLAYER_VARIABLES_CAPABILITY, null).orElse(new PlayerVariables()));
 					variables.element = message.data.element;
+					variables.elementalLevel = message.data.elementalLevel;
+					variables.elementalExp = message.data.elementalExp;
 				}
 			});
 			context.setPacketHandled(true);
