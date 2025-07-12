@@ -1,9 +1,10 @@
 package com.naizo.elementals.procedures;
 
+import tn.naizo.jauml.JaumlConfigLib;
+
 import net.minecraft.world.entity.Entity;
 
 import com.naizo.elementals.network.ElementalsModVariables;
-import com.naizo.elementals.configuration.MainConfigConfiguration;
 
 public class FireSignatureProjectileHitsPlayerProcedure {
 	public static void execute(Entity entity, Entity sourceentity) {
@@ -11,9 +12,9 @@ public class FireSignatureProjectileHitsPlayerProcedure {
 			return;
 		if (!(entity == sourceentity)) {
 			if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).element <= 1) {
-				entity.setSecondsOnFire((int) (double) MainConfigConfiguration.BURN_TIMER_1.get());
+				entity.setSecondsOnFire((int) JaumlConfigLib.getNumberValue("elementals", "fire_spells", "burn_timer_signature_level_0"));
 			} else {
-				entity.setSecondsOnFire((int) (double) MainConfigConfiguration.BURN_TIMER_2.get());
+				entity.setSecondsOnFire((int) JaumlConfigLib.getNumberValue("elementals", "fire_spells", "burn_timer_signature_level_1"));
 			}
 		}
 	}

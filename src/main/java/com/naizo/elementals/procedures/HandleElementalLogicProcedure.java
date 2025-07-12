@@ -1,5 +1,7 @@
 package com.naizo.elementals.procedures;
 
+import tn.naizo.jauml.JaumlConfigLib;
+
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -55,11 +57,11 @@ public class HandleElementalLogicProcedure {
 							new MobEffectInstance(MobEffects.REGENERATION, 20, (int) (entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel, false, false));
 				if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel >= 1) {
 					if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 60, 1, false, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 60, (int) JaumlConfigLib.getNumberValue("elementals", "water_spells", "water_breathing_level"), false, false));
 				}
 				if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel == 2) {
 					if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-						_entity.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 60, 1, false, false));
+						_entity.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, 60, (int) JaumlConfigLib.getNumberValue("elementals", "water_spells", "dolphin_grace_level"), false, false));
 				}
 			}
 		}

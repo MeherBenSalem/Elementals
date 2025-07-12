@@ -751,18 +751,6 @@
       "path": "~/Overlays"
     },
     {
-      "name": "MainConfig",
-      "type": "config",
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "main_config",
-      "metadata": {
-        "files": [
-          "src/main/java/com/naizo/elementals/configuration/MainConfigConfiguration.java"
-        ]
-      }
-    },
-    {
       "name": "IsWaterCdrZero",
       "type": "procedure",
       "compiles": true,
@@ -903,6 +891,34 @@
         ]
       },
       "path": "~/Items/Water"
+    },
+    {
+      "name": "CreateSpellsConfigFiles",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "create_spells_config_files",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/CreateSpellsConfigFilesProcedure.java"
+        ],
+        "dependencies": []
+      },
+      "path": "~/Config"
+    },
+    {
+      "name": "CreateWaterSpellsConfig",
+      "type": "procedure",
+      "compiles": true,
+      "locked_code": false,
+      "registry_name": "create_water_spells_config",
+      "metadata": {
+        "files": [
+          "src/main/java/com/naizo/elementals/procedures/CreateWaterSpellsConfigProcedure.java"
+        ],
+        "dependencies": []
+      },
+      "path": "~/Config"
     }
   ],
   "variable_elements": [
@@ -1027,13 +1043,17 @@
             "children": []
           }
         ]
+      },
+      {
+        "name": "Config",
+        "children": []
       }
     ]
   },
   "workspaceSettings": {
     "modid": "elementals",
     "modName": "Elementals",
-    "version": "1.1.0a",
+    "version": "1.2.0",
     "author": "NAIZO",
     "websiteURL": "https://meherbensalem.github.io",
     "license": "All Rights Reserved",
@@ -1044,7 +1064,8 @@
     "dependants": [],
     "mcreatorDependencies": [
       "geckolib",
-      "playeranimator"
+      "playeranimator",
+      "jauml"
     ],
     "currentGenerator": "forge-1.20.1",
     "credits": "no credits",

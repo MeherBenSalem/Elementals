@@ -1,5 +1,7 @@
 package com.naizo.elementals.procedures;
 
+import tn.naizo.jauml.JaumlConfigLib;
+
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.network.NetworkDirection;
 
@@ -23,7 +25,6 @@ import java.util.Iterator;
 import com.naizo.elementals.network.ElementalsModVariables;
 import com.naizo.elementals.init.ElementalsModEntities;
 import com.naizo.elementals.entity.ExplosiveFireOrbEntity;
-import com.naizo.elementals.configuration.MainConfigConfiguration;
 import com.naizo.elementals.ElementalsMod;
 
 public class ExplosiveOrbSpellBookRightclickedProcedure {
@@ -74,7 +75,7 @@ public class ExplosiveOrbSpellBookRightclickedProcedure {
 				}
 			}
 			if (entity instanceof Player _player)
-				_player.getCooldowns().addCooldown(itemstack.getItem(), (int) (double) MainConfigConfiguration.CDR_S2.get());
+				_player.getCooldowns().addCooldown(itemstack.getItem(), (int) JaumlConfigLib.getNumberValue("elementals", "fire_spells", "explosive_orb_cdr"));
 		} else {
 			if (entity instanceof Player _player && !_player.level().isClientSide())
 				_player.displayClientMessage(Component.literal("\u00A7cYou wield no Elemental Fire Power to use this spell"), false);

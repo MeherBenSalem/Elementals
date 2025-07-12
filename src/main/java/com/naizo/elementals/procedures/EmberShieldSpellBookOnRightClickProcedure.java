@@ -1,5 +1,7 @@
 package com.naizo.elementals.procedures;
 
+import tn.naizo.jauml.JaumlConfigLib;
+
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.network.NetworkDirection;
 
@@ -22,7 +24,6 @@ import java.util.List;
 import java.util.Iterator;
 
 import com.naizo.elementals.network.ElementalsModVariables;
-import com.naizo.elementals.configuration.MainConfigConfiguration;
 import com.naizo.elementals.ElementalsMod;
 
 public class EmberShieldSpellBookOnRightClickProcedure {
@@ -32,7 +33,7 @@ public class EmberShieldSpellBookOnRightClickProcedure {
 		if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).element == 1) {
 			if ((entity.getCapability(ElementalsModVariables.PLAYER_VARIABLES_CAPABILITY, null).orElse(new ElementalsModVariables.PlayerVariables())).elementalLevel >= 1) {
 				if (entity instanceof LivingEntity _entity && !_entity.level().isClientSide())
-					_entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, (int) (double) MainConfigConfiguration.ABSORPTION_LVL.get(), false, false));
+					_entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, (int) JaumlConfigLib.getNumberValue("elementals", "fire_spells", "ember_shield_absorption_lvl"), false, false));
 				if (world.isClientSide()) {
 					SetupAnimationsProcedure.setAnimationClientside((Player) entity, "fortify", false);
 				}
@@ -50,7 +51,7 @@ public class EmberShieldSpellBookOnRightClickProcedure {
 					}
 				}
 				if (entity instanceof Player _player)
-					_player.getCooldowns().addCooldown(itemstack.getItem(), (int) (double) MainConfigConfiguration.CDR_S3.get());
+					_player.getCooldowns().addCooldown(itemstack.getItem(), (int) JaumlConfigLib.getNumberValue("elementals", "fire_spells", "ember_shield_cdr"));
 				if (world instanceof Level _level) {
 					if (!_level.isClientSide()) {
 						_level.playSound(null, BlockPos.containing(x, y, z), ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation("block.anvil.place")), SoundSource.NEUTRAL, 1, 1);

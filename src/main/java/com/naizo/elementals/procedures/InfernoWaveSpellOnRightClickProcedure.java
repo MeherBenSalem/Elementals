@@ -1,5 +1,7 @@
 package com.naizo.elementals.procedures;
 
+import tn.naizo.jauml.JaumlConfigLib;
+
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.network.NetworkDirection;
 
@@ -29,7 +31,6 @@ import java.util.Iterator;
 import java.util.Comparator;
 
 import com.naizo.elementals.network.ElementalsModVariables;
-import com.naizo.elementals.configuration.MainConfigConfiguration;
 import com.naizo.elementals.ElementalsMod;
 
 public class InfernoWaveSpellOnRightClickProcedure {
@@ -43,7 +44,8 @@ public class InfernoWaveSpellOnRightClickProcedure {
 					List<Entity> _entfound = world.getEntitiesOfClass(Entity.class, new AABB(_center, _center).inflate(20 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_center))).toList();
 					for (Entity entityiterator : _entfound) {
 						if (entityiterator instanceof LivingEntity && !(entity == entityiterator)) {
-							entityiterator.hurt(new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)), (float) (double) MainConfigConfiguration.DAMAGE_INFERNO.get());
+							entityiterator.hurt(new DamageSource(world.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(DamageTypes.GENERIC)),
+									(float) JaumlConfigLib.getNumberValue("elementals", "fire_spells", "inferno_wave_damage"));
 							entityiterator.setSecondsOnFire(15);
 							if (world instanceof ServerLevel _level)
 								_level.sendParticles(ParticleTypes.FLAME, (entityiterator.getX()), (entityiterator.getY()), (entityiterator.getZ()), 5, 3, 3, 3, 1);
@@ -67,7 +69,7 @@ public class InfernoWaveSpellOnRightClickProcedure {
 					}
 				}
 				if (entity instanceof Player _player)
-					_player.getCooldowns().addCooldown(itemstack.getItem(), (int) (double) MainConfigConfiguration.CDR_S4.get());
+					_player.getCooldowns().addCooldown(itemstack.getItem(), (int) JaumlConfigLib.getNumberValue("elementals", "fire_spells", "inferno_wave_cdr"));
 				if (world.isClientSide())
 					Minecraft.getInstance().gameRenderer.displayItemActivation(new ItemStack(Blocks.DRAGON_HEAD));
 				if (world instanceof Level _level) {

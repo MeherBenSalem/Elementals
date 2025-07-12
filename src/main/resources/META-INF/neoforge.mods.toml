@@ -4,7 +4,7 @@ license="All Rights Reserved"
 
 [[mods]]
 modId="elementals"
-version="1.0.3"
+version="1.2.0"
 displayName="Elementals"
 displayURL="https://meherbensalem.github.io"
 logoFile="logo.png"
@@ -37,6 +37,12 @@ authors="NAIZO"
     side="BOTH"
 [[dependencies.elementals]]
     modId="playeranimator"
+    type="optional"
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.elementals]]
+    modId="jauml"
     type="optional"
     versionRange="[0,)"
     ordering="NONE"

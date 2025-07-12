@@ -2,6 +2,6 @@
   "_fv": 73,
   "_type": "procedure",
   "definition": {
-    "procedurexml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"event_trigger\" deletable=\"false\" x=\"40\" y=\"40\"><field name=\"trigger\">no_ext_trigger</field><next><block type=\"explode\"><field name=\"mode\">TNT</field><value name=\"x\"><block type=\"coord_x\"></block></value><value name=\"y\"><block type=\"coord_y\"></block></value><value name=\"z\"><block type=\"coord_z\"></block></value><value name=\"power\"><block type=\"number_variable\"><field name=\"variable\">explosion_power</field><field name=\"config\">CUSTOM:MainConfig</field></block></value></block></next></block></xml>"
+    "procedurexml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"event_trigger\" deletable=\"false\" x=\"40\" y=\"40\"><field name=\"trigger\">no_ext_trigger</field><next><block type=\"explode\"><field name=\"mode\">TNT</field><value name=\"x\"><block type=\"coord_x\"></block></value><value name=\"y\"><block type=\"coord_y\"></block></value><value name=\"z\"><block type=\"coord_z\"></block></value><value name=\"power\"><block type=\"getnumbervalue\"><value name=\"Key\"><block type=\"text\"><field name=\"TEXT\">explosive_orb_explosion_power</field></block></value><value name=\"dir\"><block type=\"text\"><field name=\"TEXT\">elementals</field></block></value><value name=\"fileName\"><block type=\"text\"><field name=\"TEXT\">fire_spells</field></block></value></block></value></block></next></block></xml>"
   }
 }
