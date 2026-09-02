@@ -1,6 +1,8 @@
 .gradle
+**/.gradle
 build
 **/build
+all-jars/
 run
 runs
 bin
@@ -8,3 +10,5 @@ out
 *.iml
 .idea
 .vscode
+.release-upload-state.json
+tools/
