@@ -1,0 +1,38 @@
+{
+    "schemaVersion": 1,
+    "id": "elementals",
+    "version": "${version}",
+    "name": "${mod_name}",
+    "description": "${description}",
+    "authors": [
+        "${mod_author}"
+    ],
+    "contact": {
+        "homepage": "https://github.com/MeherBenSalem/Elementals",
+        "sources": "https://github.com/MeherBenSalem/Elementals",
+        "issues": "https://github.com/MeherBenSalem/Elementals/issues"
+    },
+    "license": "${license}",
+    "icon": "logo.png",
+    "environment": "*",
+    "entrypoints": {
+        "main": [
+            "com.naizo.elementals.fabric.ElementalsFabric"
+        ],
+        "client": [
+            "com.naizo.elementals.fabric.client.ElementalsFabricClient"
+        ]
+    },
+    "mixins": [
+        "elementals.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.19",
+        "fabric-api": "*",
+        "minecraft": "${minecraft_version}",
+        "java": ">=25"
+    },
+    "suggests": {
+        "rpg_attribute_system": "*"
+    }
+}

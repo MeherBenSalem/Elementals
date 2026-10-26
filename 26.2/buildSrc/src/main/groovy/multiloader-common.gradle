@@ -4,7 +4,7 @@ plugins {
 }
 
 base {
-    archivesName = "${mod_id}-${project.name}-${minecraft_version}"
+    archivesName = "${archive_base}-${project.name}-${minecraft_version}"
 }
 
 java {
@@ -79,4 +79,9 @@ publishing {
             url System.getenv('local_maven_url')
         }
     }
+}
+
+tasks.withType(Javadoc).configureEach {
+    failOnError = false
+    options.addStringOption('Xdoclint:none', '-quiet')
 }

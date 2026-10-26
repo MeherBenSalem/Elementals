@@ -49,3 +49,32 @@ sourceSets.configureEach {
         }
     }
 }
+
+// Plain-Java regression checks for the skill tree, stats, progression and build codes.
+sourceSets {
+    test {
+        java {
+            srcDir 'src/test/java'
+        }
+    }
+}
+
+dependencies {
+    testImplementation 'com.google.code.gson:gson:2.13.1'
+}
+
+tasks.register('coreRegression', JavaExec) {
+    group = 'verification'
+    description = 'Runs the pure-Java CoreRegression checks.'
+    dependsOn tasks.named('testClasses')
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.naizo.elementals.core.CoreRegression'
+}
+
+tasks.named('check') {
+    dependsOn 'coreRegression'
+}
+
+tasks.named('test', Test) {
+    failOnNoDiscoveredTests = false
+}

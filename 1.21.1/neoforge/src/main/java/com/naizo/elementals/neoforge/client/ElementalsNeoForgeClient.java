@@ -1,52 +1,70 @@
 package com.naizo.elementals.neoforge.client;
 
 import com.naizo.elementals.Elementals;
-import com.naizo.elementals.client.ElementalHudState;
-import net.minecraft.client.KeyMapping;
+import com.naizo.elementals.client.ClientPowers;
+import com.naizo.elementals.client.ClientSetup;
+import com.naizo.elementals.client.PowerHudRenderer;
+import com.naizo.elementals.client.PowerKeys;
+import com.naizo.elementals.compat.Compat;
+import com.naizo.elementals.net.Net;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.event.RenderGuiEvent;
-import org.lwjgl.glfw.GLFW;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
 @EventBusSubscriber(modid = Elementals.MOD_ID, value = Dist.CLIENT)
 public final class ElementalsNeoForgeClient {
-    private static final KeyMapping SIGNATURE_ABILITY = new KeyMapping("key.elementals.signature_ability", GLFW.GLFW_KEY_F, "key.categories.elemental");
-
     private ElementalsNeoForgeClient() {
     }
 
     @EventBusSubscriber(modid = Elementals.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static final class ModBus {
+        private ModBus() {
+        }
+
         @SubscribeEvent
-        public static void registerKeys(RegisterKeyMappingsEvent event) {
-            event.register(SIGNATURE_ABILITY);
+        public static void keys(RegisterKeyMappingsEvent event) {
+            PowerKeys.all().forEach(event::register);
+        }
+
+        @SubscribeEvent
+        public static void renderers(EntityRenderersEvent.RegisterRenderers event) {
+            ClientSetup.renderers(new ClientSetup.RendererSink() {
+                @Override
+                public <T extends Entity> void register(EntityType<? extends T> type, EntityRendererProvider<T> provider) {
+                    event.registerEntityRenderer(type, provider);
+                }
+            });
+        }
+
+        @SubscribeEvent
+        public static void layers(RegisterGuiLayersEvent event) {
+            event.registerAbove(VanillaGuiLayers.HOTBAR, Compat.id(Elementals.MOD_ID, "powers_hud"),
+                    (graphics, tracker) -> PowerHudRenderer.render(graphics, tracker.getGameTimeDeltaPartialTick(false)));
         }
     }
 
     @SubscribeEvent
-    public static void clientTick(ClientTickEvent.Post event) {
-        if (Minecraft.getInstance().screen == null) {
-            while (SIGNATURE_ABILITY.consumeClick()) {
-                Elementals.PLATFORM.sendSignatureAbility();
-            }
-        }
+    public static void tick(ClientTickEvent.Post event) {
+        PowerKeys.tick(Minecraft.getInstance());
     }
 
     @SubscribeEvent
-    public static void renderHud(RenderGuiEvent.Pre event) {
-        Minecraft minecraft = Minecraft.getInstance();
-        String texture = ElementalHudState.texture(minecraft.player);
-        if (texture == null) {
-            return;
-        }
-        int h = minecraft.getWindow().getGuiScaledHeight();
-        event.getGuiGraphics().blit(ResourceLocation.fromNamespaceAndPath(Elementals.MOD_ID, "textures/screens/" + texture + ".png"), 4, h - 21, 0, 0, 16, 16, 16, 16);
-        event.getGuiGraphics().drawString(minecraft.font, ElementalHudState.levelText(minecraft.player), 10, h - 15, -1, false);
+    public static void loggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
+        ClientPowers.send(Net.message(Net.HELLO));
+    }
+
+    @SubscribeEvent
+    public static void loggedOut(ClientPlayerNetworkEvent.LoggingOut event) {
+        ClientSetup.disconnected();
     }
 }

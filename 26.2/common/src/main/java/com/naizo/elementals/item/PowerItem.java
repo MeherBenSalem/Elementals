@@ -1,0 +1,54 @@
+package com.naizo.elementals.item;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+/** Base for right-click items. Keeps the version-specific Item API in one place. Minecraft 26.2 and 26.3 edition. */
+public abstract class PowerItem extends Item {
+    protected PowerItem(Properties properties) {
+        super(properties);
+    }
+
+    /** Runs on the server. Return true when the use did something. */
+    protected abstract boolean onUse(ServerPlayer player, ItemStack stack);
+
+    protected abstract void tooltip(List<Component> lines);
+
+    @Override
+    public InteractionResult use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+            return onUse(serverPlayer, stack) ? InteractionResult.SUCCESS_SERVER : InteractionResult.FAIL;
+        }
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display, Consumer<Component> builder, TooltipFlag flag) {
+        List<Component> lines = new ArrayList<>();
+        tooltip(lines);
+        lines.forEach(builder);
+    }
+
+    protected static void cooldown(Player player, ItemStack stack, int ticks) {
+        player.getCooldowns().addCooldown(stack, ticks);
+    }
+
+    protected static void consume(Player player, ItemStack stack) {
+        if (!player.getAbilities().instabuild) {
+            stack.shrink(1);
+        }
+    }
+}

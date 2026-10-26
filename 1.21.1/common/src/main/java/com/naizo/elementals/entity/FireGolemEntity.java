@@ -1,42 +1,75 @@
 package com.naizo.elementals.entity;
 
-import net.minecraft.nbt.CompoundTag;
+import com.naizo.elementals.compat.Compat;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.animal.IronGolem;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerLevelAccessor;
 
-public class FireGolemEntity extends Monster {
-    private String texture = "spiritbody";
-
+/** A hostile golem of cooling magma from the Nether. Built on the iron golem body. Minecraft 1.21.1 edition. */
+public class FireGolemEntity extends IronGolem implements Enemy {
     public FireGolemEntity(EntityType<? extends FireGolemEntity> type, Level level) {
         super(type, level);
-        xpReward = 0;
-        setNoAi(false);
+        xpReward = 12;
     }
 
     @Override
     protected void registerGoals() {
-        goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2, false) {
-        });
-        targetSelector.addGoal(2, new HurtByTargetGoal(this));
-        goalSelector.addGoal(3, new RandomStrollGoal(this, 0.8));
-        goalSelector.addGoal(4, new RandomLookAroundGoal(this));
-        targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Player.class, false, false));
+        goalSelector.addGoal(0, new FloatGoal(this));
+        goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0, true));
+        goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 0.6));
+        goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 8));
+        goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity target) {
+        boolean hit = super.doHurtTarget(target);
+        if (hit && target instanceof LivingEntity living) {
+            Compat.ignite(living, 4);
+        }
+        return hit;
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distance) {
+        return true;
+    }
+
+    @Override
+    public void aiStep() {
+        super.aiStep();
+        if (level().isClientSide() && random.nextInt(3) == 0) {
+            level().addParticle(random.nextBoolean() ? ParticleTypes.FLAME : ParticleTypes.SMOKE,
+                    getRandomX(0.6), getRandomY(), getRandomZ(0.6), 0, 0.02, 0);
+        }
+        if (!level().isClientSide() && level().getDifficulty() == Difficulty.PEACEFUL) {
+            discard();
+        }
     }
 
     @Override
@@ -51,39 +84,20 @@ public class FireGolemEntity extends Monster {
 
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.GENERIC_DEATH;
-    }
-
-    @Override
-    public boolean hurt(DamageSource source, float amount) {
-        return !source.is(DamageTypes.IN_FIRE) && super.hurt(source, amount);
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        tag.putString("Texture", texture);
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        if (tag.contains("Texture")) {
-            texture = tag.getString("Texture");
-        }
-    }
-
-    @Override
-    public float maxUpStep() {
-        return 0.6F;
+        return SoundEvents.BLAZE_DEATH;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes()
-                .add(Attributes.MOVEMENT_SPEED, 0.3)
-                .add(Attributes.MAX_HEALTH, 40)
-                .add(Attributes.ARMOR, 0)
-                .add(Attributes.ATTACK_DAMAGE, 10)
-                .add(Attributes.FOLLOW_RANGE, 16);
+        return IronGolem.createAttributes()
+                .add(Attributes.MAX_HEALTH, 60)
+                .add(Attributes.MOVEMENT_SPEED, 0.27)
+                .add(Attributes.ATTACK_DAMAGE, 9)
+                .add(Attributes.ARMOR, 4)
+                .add(Attributes.FOLLOW_RANGE, 24)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 0.8);
+    }
+
+    public static boolean checkSpawn(EntityType<FireGolemEntity> type, ServerLevelAccessor level, MobSpawnType reason, BlockPos pos, RandomSource random) {
+        return level.getDifficulty() != Difficulty.PEACEFUL && Mob.checkMobSpawnRules(type, level, reason, pos, random);
     }
 }

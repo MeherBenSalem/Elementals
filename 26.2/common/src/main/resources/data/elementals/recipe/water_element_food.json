@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ab",
+    "cd"
+  ],
+  "key": {
+    "a": "minecraft:prismarine_crystals",
+    "b": "minecraft:wheat_seeds",
+    "c": "elementals:water_rune",
+    "d": "minecraft:kelp"
+  },
+  "result": {
+    "id": "elementals:water_element_food",
+    "count": 1
+  }
+}

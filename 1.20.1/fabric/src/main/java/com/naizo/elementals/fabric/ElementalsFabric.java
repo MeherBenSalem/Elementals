@@ -1,91 +1,112 @@
 package com.naizo.elementals.fabric;
 
 import com.naizo.elementals.Elementals;
+import com.naizo.elementals.command.PowersCommands;
+import com.naizo.elementals.compat.Compat;
 import com.naizo.elementals.effect.TidebinderEffect;
 import com.naizo.elementals.entity.ExplosiveFireOrbEntity;
 import com.naizo.elementals.entity.FireGolemEntity;
 import com.naizo.elementals.entity.FireSignatureEntity;
-import com.naizo.elementals.fabric.platform.FabricPlatform;
-import com.naizo.elementals.item.*;
+import com.naizo.elementals.net.Net;
+import com.naizo.elementals.power.CombatHooks;
+import com.naizo.elementals.power.PowerManager;
+import com.naizo.elementals.registry.ModContent;
 import com.naizo.elementals.registry.ModEffects;
 import com.naizo.elementals.registry.ModEntities;
 import com.naizo.elementals.registry.ModItems;
-import com.naizo.elementals.spell.ElementalLogic;
-import com.naizo.elementals.spell.FireRuneDrops;
-import com.naizo.elementals.spell.FireSpells;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
+import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.world.level.levelgen.Heightmap;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ElementalsFabric implements ModInitializer {
-    public static final ResourceLocation SIGNATURE_PACKET = new ResourceLocation(Elementals.MOD_ID, "signature_ability");
-
     @Override
     public void onInitialize() {
-        FabricPlatform platform = new FabricPlatform();
-        Elementals.init(platform);
+        Elementals.init(new FabricPlatform());
         registerContent();
         FabricDefaultAttributeRegistry.register(ModEntities.FIRE_GOLEM.get(), FireGolemEntity.createAttributes());
-        ServerTickEvents.START_SERVER_TICK.register(server -> server.getPlayerList().getPlayers().forEach(ElementalLogic::tickPlayer));
-        ServerLivingEntityEvents.AFTER_DEATH.register((entity, source) -> FireRuneDrops.onLivingDeath(entity));
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> Elementals.PLATFORM.syncPlayerData(handler.player));
-        ServerPlayNetworking.registerGlobalReceiver(SIGNATURE_PACKET, (server, player, handler, buf, responseSender) -> server.execute(() -> FireSpells.castSignature(player.level(), player)));
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.NETHER_WASTES, Biomes.CRIMSON_FOREST, Biomes.BASALT_DELTAS),
+                MobCategory.MONSTER, ModEntities.FIRE_GOLEM.get(), 12, 1, 2);
+
+        ServerPlayNetworking.registerGlobalReceiver(FabricChannels.TO_SERVER, (server, player, handler, buf, sender) -> {
+            String message = buf.readUtf(Net.MAX_LENGTH);
+            server.execute(() -> PowerManager.handle(player, message));
+        });
+
+        ServerLifecycleEvents.SERVER_STARTED.register(PowerManager::serverStarted);
+        ServerLifecycleEvents.SERVER_STOPPING.register(PowerManager::serverStopping);
+        ServerTickEvents.END_SERVER_TICK.register(PowerManager::tick);
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> PowerManager.join(handler.player));
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> PowerManager.leave(handler.player));
+        ServerPlayerEvents.AFTER_RESPAWN.register((oldPlayer, newPlayer, alive) -> PowerManager.respawned(newPlayer));
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register((player, origin, destination) -> PowerManager.respawned(player));
+        ServerLivingEntityEvents.ALLOW_DAMAGE.register(CombatHooks::allowDamage);
+        ServerLivingEntityEvents.ALLOW_DEATH.register((entity, source, amount) -> CombatHooks.allowDeath(entity, source));
+        ServerLivingEntityEvents.AFTER_DEATH.register(CombatHooks::onDeath);
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> PowersCommands.register(dispatcher));
     }
 
     private static void registerContent() {
-        ModEntities.FIRE_SIGNATURE = entity("fire_signature", EntityType.Builder.<FireSignatureEntity>of(FireSignatureEntity::new, MobCategory.MISC).clientTrackingRange(64).updateInterval(1).sized(0.5F, 0.5F));
-        ModEntities.EXPLOSIVE_FIRE_ORB = entity("explosive_fire_orb", EntityType.Builder.<ExplosiveFireOrbEntity>of(ExplosiveFireOrbEntity::new, MobCategory.MISC).clientTrackingRange(64).updateInterval(1).sized(0.5F, 0.5F));
-        ModEntities.FIRE_GOLEM = entity("fire_golem", EntityType.Builder.<FireGolemEntity>of(FireGolemEntity::new, MobCategory.MONSTER).clientTrackingRange(64).updateInterval(3).fireImmune().sized(0.6F, 1.8F));
-        ModEffects.TIDEBINDER_EFFECT = register("tidebinder_effect", () -> Registry.register(BuiltInRegistries.MOB_EFFECT, id("tidebinder_effect"), new TidebinderEffect()));
-        ModItems.FIRE_ELEMENT_FOOD = item("fire_element_food", FireElementFoodItem::new);
-        ModItems.WATER_ELEMENT_FOOD = item("water_element_food", WaterElementFoodItem::new);
-        ModItems.FIRE_RUNE = item("fire_rune", FireRuneItem::new);
-        ModItems.EXPLOSIVE_ORB_SPELL_BOOK = item("explosive_orb_spell_book", ExplosiveOrbSpellBookItem::new);
-        ModItems.EMBER_FIRE_SHIELD_SPELL_BOOK = item("ember_fire_shield_spell_book", EmberFireShieldSpellBookItem::new);
-        ModItems.INFERNO_WAVE_SPELL_BOOK = item("inferno_wave_spell_book", InfernoWaveSpellBookItem::new);
-        ModItems.FIRE_GOLEM_SPAWN_EGG = item("fire_golem_spawn_egg", () -> new SpawnEggItem(ModEntities.FIRE_GOLEM.get(), 0x990000, 0xFFFF00, new Item.Properties()));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.FOOD_AND_DRINKS).register(entries -> {
-            entries.accept(ModItems.FIRE_ELEMENT_FOOD.get());
-            entries.accept(ModItems.WATER_ELEMENT_FOOD.get());
-        });
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS).register(entries -> entries.accept(ModItems.FIRE_GOLEM_SPAWN_EGG.get()));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.REDSTONE_BLOCKS).register(entries -> entries.accept(ModItems.FIRE_RUNE.get()));
-        ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
-            entries.accept(ModItems.EXPLOSIVE_ORB_SPELL_BOOK.get());
-            entries.accept(ModItems.EMBER_FIRE_SHIELD_SPELL_BOOK.get());
-            entries.accept(ModItems.INFERNO_WAVE_SPELL_BOOK.get());
-        });
+        ModEntities.FIRE_SIGNATURE = entity("fire_signature", EntityType.Builder.<FireSignatureEntity>of(FireSignatureEntity::new, MobCategory.MISC)
+                .clientTrackingRange(8).updateInterval(1).sized(0.4F, 0.4F).build("fire_signature"));
+        ModEntities.EXPLOSIVE_FIRE_ORB = entity("explosive_fire_orb", EntityType.Builder.<ExplosiveFireOrbEntity>of(ExplosiveFireOrbEntity::new, MobCategory.MISC)
+                .clientTrackingRange(8).updateInterval(1).sized(0.6F, 0.6F).build("explosive_fire_orb"));
+        ModEntities.FIRE_GOLEM = entity("fire_golem", FabricEntityTypeBuilder.createMob()
+                .spawnGroup(MobCategory.MONSTER)
+                .entityFactory(FireGolemEntity::new)
+                .dimensions(EntityDimensions.fixed(1.4F, 2.7F))
+                .fireImmune()
+                .trackRangeChunks(10)
+                .spawnRestriction(SpawnPlacements.Type.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, FireGolemEntity::checkSpawn)
+                .build());
+        TidebinderEffect effect = Registry.register(BuiltInRegistries.MOB_EFFECT, Compat.id(Elementals.MOD_ID, "tidebinder_effect"), new TidebinderEffect());
+        ModEffects.TIDEBINDER_EFFECT = () -> effect;
+        ModContent.items(ElementalsFabric::item, p -> new SpawnEggItem(ModEntities.FIRE_GOLEM.get(), 0x2A1A14, 0xFF7A2E, p));
+        CreativeModeTab tab = FabricItemGroup.builder()
+                .title(Component.translatable("itemGroup.elementals"))
+                .icon(() -> new ItemStack(ModItems.REMNANT_TOME.get()))
+                .displayItems((parameters, output) -> {
+                    for (String name : ModItems.NAMES) {
+                        output.accept(BuiltInRegistries.ITEM.get(Compat.id(Elementals.MOD_ID, name)));
+                    }
+                })
+                .build();
+        Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Compat.id(Elementals.MOD_ID, "main"), tab);
     }
 
-    private static <T extends Item> Supplier<T> item(String name, Supplier<T> factory) {
-        return register(name, () -> Registry.register(BuiltInRegistries.ITEM, id(name), factory.get()));
+    private static Supplier<Item> item(String name, Function<Item.Properties, Item> factory) {
+        Item item = Registry.register(BuiltInRegistries.ITEM, Compat.id(Elementals.MOD_ID, name), factory.apply(new Item.Properties()));
+        return () -> item;
     }
 
-    private static <T extends net.minecraft.world.entity.Entity> Supplier<EntityType<T>> entity(String name, EntityType.Builder<T> builder) {
-        return register(name, () -> Registry.register(BuiltInRegistries.ENTITY_TYPE, id(name), builder.build(name)));
-    }
-
-    private static <T> Supplier<T> register(String name, Supplier<T> supplier) {
-        T value = supplier.get();
-        return () -> value;
-    }
-
-    private static ResourceLocation id(String path) {
-        return new ResourceLocation(Elementals.MOD_ID, path);
+    private static <T extends net.minecraft.world.entity.Entity> Supplier<EntityType<T>> entity(String name, EntityType<T> type) {
+        EntityType<T> registered = Registry.register(BuiltInRegistries.ENTITY_TYPE, Compat.id(Elementals.MOD_ID, name), type);
+        return () -> registered;
     }
 }

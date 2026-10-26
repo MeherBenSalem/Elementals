@@ -1,13 +1,11 @@
 package com.naizo.elementals.entity;
 
+import com.naizo.elementals.ability.Fx;
+import com.naizo.elementals.ability.PyromancyAbilities;
 import com.naizo.elementals.registry.ModEntities;
-import com.naizo.elementals.spell.FireSpells;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.RandomSource;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -16,58 +14,74 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 
+/** The Explosive Orb. Bursts on contact without breaking blocks. */
 public class ExplosiveFireOrbEntity extends AbstractArrow implements ItemSupplier {
-    public static final ItemStack PROJECTILE_ITEM = new ItemStack(Items.FIRE_CHARGE);
+    private static final ItemStack ITEM = new ItemStack(Items.FIRE_CHARGE);
+    public boolean empowered;
 
     public ExplosiveFireOrbEntity(EntityType<? extends ExplosiveFireOrbEntity> type, Level level) {
         super(type, level);
+        setNoGravity(true);
     }
 
     public ExplosiveFireOrbEntity(EntityType<? extends ExplosiveFireOrbEntity> type, LivingEntity owner, Level level) {
         super(type, owner, level);
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return new ClientboundAddEntityPacket(this);
+        setNoGravity(true);
+        pickup = Pickup.DISALLOWED;
     }
 
     @Override
     public ItemStack getItem() {
-        return PROJECTILE_ITEM;
+        return ITEM;
     }
 
     @Override
     protected ItemStack getPickupItem() {
-        return PROJECTILE_ITEM;
+        return ItemStack.EMPTY;
+    }
+
+    private void burst(Vec3 at) {
+        if (level() instanceof ServerLevel server && getOwner() instanceof ServerPlayer owner) {
+            PyromancyAbilities.orbBurst(owner, server, at, empowered);
+        }
+        discard();
+    }
+
+    @Override
+    protected void onHitEntity(EntityHitResult hit) {
+        burst(hit.getLocation());
     }
 
     @Override
     protected void onHitBlock(BlockHitResult hit) {
-        super.onHitBlock(hit);
-        FireSpells.explode(level(), hit.getBlockPos().getX(), hit.getBlockPos().getY(), hit.getBlockPos().getZ());
-        discard();
+        burst(hit.getLocation());
     }
 
     @Override
     public void tick() {
         super.tick();
-        FireSpells.projectileFlame(level(), getX(), getY(), getZ());
-        if (inGround) {
-            discard();
+        if (level() instanceof ServerLevel server) {
+            Vec3 p = position();
+            Fx.at(server, ParticleTypes.FLAME, p, 4, 0.15, 0.01);
+            Fx.at(server, ParticleTypes.LAVA, p, 1, 0.1, 0);
+            Fx.at(server, ParticleTypes.SMOKE, p, 1, 0.1, 0.01);
+        }
+        if (tickCount > 80) {
+            burst(position());
         }
     }
 
-    public static ExplosiveFireOrbEntity shoot(Level level, LivingEntity owner, RandomSource random) {
-        ExplosiveFireOrbEntity arrow = new ExplosiveFireOrbEntity(ModEntities.EXPLOSIVE_FIRE_ORB.get(), owner, level);
-        arrow.shoot(owner.getViewVector(1).x, owner.getViewVector(1).y, owner.getViewVector(1).z, 2, 0);
-        arrow.setSilent(true);
-        arrow.setCritArrow(false);
-        arrow.setBaseDamage(5);
-        arrow.setKnockback(5);
-        level.addFreshEntity(arrow);
-        level.playSound(null, owner.blockPosition(), SoundEvents.BLAZE_SHOOT, SoundSource.PLAYERS, 1, 1F / (random.nextFloat() * 0.5F + 1) + 0.5F);
-        return arrow;
+    public static void shoot(ServerPlayer owner, float speed, boolean empowered) {
+        ExplosiveFireOrbEntity orb = new ExplosiveFireOrbEntity(ModEntities.EXPLOSIVE_FIRE_ORB.get(), owner, owner.level());
+        Vec3 look = owner.getLookAngle();
+        orb.setPos(owner.getX(), owner.getEyeY() - 0.2, owner.getZ());
+        orb.shoot(look.x, look.y, look.z, speed, 0);
+        orb.setBaseDamage(0);
+        orb.setSilent(true);
+        orb.empowered = empowered;
+        owner.level().addFreshEntity(orb);
     }
 }

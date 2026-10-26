@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "ADA",
+    "FBW",
+    "ADA"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "F": {
+      "item": "elementals:fire_rune"
+    },
+    "W": {
+      "item": "elementals:water_rune"
+    }
+  },
+  "result": {
+    "item": "elementals:remnant_tome",
+    "count": 1
+  }
+}

@@ -4,11 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.naizo.elementals.Elementals;
 import com.naizo.elementals.data.ElementalPlayerData;
-import com.naizo.elementals.neoforge.network.PlayerDataSyncPacket;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
@@ -36,11 +33,7 @@ public final class NeoForgePlayerData {
     private NeoForgePlayerData() {
     }
 
-    public static ElementalPlayerData get(Entity entity) {
-        return entity == null ? new ElementalPlayerData() : entity.getData(PLAYER_DATA.get());
-    }
-
-    public static void sync(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, new PlayerDataSyncPacket(get(player)));
+    public static ElementalPlayerData legacy(Entity entity) {
+        return entity != null && entity.hasData(PLAYER_DATA.get()) ? entity.getData(PLAYER_DATA.get()) : null;
     }
 }
