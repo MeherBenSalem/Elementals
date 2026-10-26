@@ -1417,7 +1417,8 @@ public final class TreeView {
     }
 
     private void drawTextTooltip(Canvas c, List<Line> lines, int mouseX, int mouseY) {
-        int maxWidth = 220;
+        // Narrow screens (portrait windows, high GUI scales) get a tooltip that still fits beside the cursor.
+        int maxWidth = (int) Math.max(80, Math.min(220, w - 24));
         List<Line> wrapped = new ArrayList<>();
         float width = 0;
         for (Line line : lines) {
@@ -1437,6 +1438,11 @@ public final class TreeView {
         float y = mouseY - 6;
         if (x + width + 12 > w) {
             x = mouseX - width - 20;
+        }
+        if (x < 9) {
+            // No room beside the cursor (narrow screens): go below it, or above it near the bottom.
+            x = Math.max(9, Math.min(w - width - 9, mouseX - width / 2));
+            y = mouseY + 16 + height + 10 > h ? mouseY - 16 - height : mouseY + 16;
         }
         if (y + height + 10 > h) {
             y = h - height - 10;

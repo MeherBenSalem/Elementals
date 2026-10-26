@@ -1,0 +1,505 @@
+{
+ "fps": 30,
+ "size": [
+  1080,
+  1920
+ ],
+ "shots": [
+  {
+   "name": "hook_meteor",
+   "start": 0.0,
+   "end": 2.12,
+   "src": "meteor.mp4",
+   "src_start": 4.4,
+   "speed": 1.5,
+   "cam": [
+    [
+     0.0,
+     1.15,
+     540,
+     760
+    ],
+    [
+     2.12,
+     1.26,
+     540,
+     700
+    ]
+   ],
+   "shake": [
+    [
+     0.85,
+     26,
+     0.7
+    ]
+   ],
+   "whoosh": false,
+   "punch": false
+  },
+  {
+   "name": "tree_opens",
+   "start": 2.12,
+   "end": 3.33,
+   "src": "tree_open.mp4",
+   "src_start": 0.3,
+   "speed": 1.0,
+   "cam": [
+    [
+     2.12,
+     1.12,
+     540,
+     960
+    ],
+    [
+     3.33,
+     1.0,
+     540,
+     960
+    ]
+   ]
+  },
+  {
+   "name": "tree_zoom",
+   "start": 3.33,
+   "end": 5.43,
+   "src": "tree_open.mp4",
+   "src_start": 1.5,
+   "speed": 1.62,
+   "cam": [
+    [
+     3.33,
+     1.0,
+     540,
+     960
+    ],
+    [
+     5.43,
+     1.04,
+     540,
+     960
+    ]
+   ],
+   "punch": false
+  },
+  {
+   "name": "origins",
+   "start": 5.43,
+   "end": 8.4,
+   "src": "origins.mp4",
+   "src_start": 0.35,
+   "speed": 1.45,
+   "cam": [
+    [
+     5.43,
+     1.1,
+     540,
+     975
+    ],
+    [
+     8.4,
+     1.16,
+     540,
+     975
+    ]
+   ]
+  },
+  {
+   "name": "mont_inferno",
+   "start": 8.4,
+   "end": 8.583,
+   "src": "inferno_wave.mp4",
+   "src_start": 2.1,
+   "speed": 1.0,
+   "cam": [
+    [
+     8.4,
+     1.3,
+     540,
+     900
+    ],
+    [
+     8.583,
+     1.22,
+     540,
+     900
+    ]
+   ],
+   "punch": false,
+   "whoosh": false
+  },
+  {
+   "name": "mont_glacial",
+   "start": 8.583,
+   "end": 8.767,
+   "src": "glacial_prison.mp4",
+   "src_start": 0.95,
+   "speed": 1.0,
+   "cam": [
+    [
+     8.583,
+     1.3,
+     540,
+     900
+    ],
+    [
+     8.767,
+     1.22,
+     540,
+     900
+    ]
+   ],
+   "punch": false,
+   "whoosh": false
+  },
+  {
+   "name": "mont_radiant",
+   "start": 8.767,
+   "end": 8.95,
+   "src": "radiant_nova.mp4",
+   "src_start": 0.95,
+   "speed": 1.0,
+   "cam": [
+    [
+     8.767,
+     1.3,
+     540,
+     900
+    ],
+    [
+     8.95,
+     1.22,
+     540,
+     900
+    ]
+   ],
+   "punch": false,
+   "whoosh": false
+  },
+  {
+   "name": "mont_eclipse",
+   "start": 8.95,
+   "end": 9.133,
+   "src": "eclipse.mp4",
+   "src_start": 1.0,
+   "speed": 1.0,
+   "cam": [
+    [
+     8.95,
+     1.3,
+     540,
+     900
+    ],
+    [
+     9.133,
+     1.22,
+     540,
+     900
+    ]
+   ],
+   "punch": false,
+   "whoosh": false
+  },
+  {
+   "name": "mont_thunderclap",
+   "start": 9.133,
+   "end": 9.317,
+   "src": "thunderclap.mp4",
+   "src_start": 1.0,
+   "speed": 1.0,
+   "cam": [
+    [
+     9.133,
+     1.3,
+     540,
+     900
+    ],
+    [
+     9.317,
+     1.22,
+     540,
+     900
+    ]
+   ],
+   "punch": false,
+   "whoosh": false
+  },
+  {
+   "name": "mont_verdant",
+   "start": 9.317,
+   "end": 9.5,
+   "src": "verdant_rebirth.mp4",
+   "src_start": 0.55,
+   "speed": 1.0,
+   "cam": [
+    [
+     9.317,
+     1.3,
+     540,
+     900
+    ],
+    [
+     9.5,
+     1.22,
+     540,
+     900
+    ]
+   ],
+   "punch": false,
+   "whoosh": false
+  },
+  {
+   "name": "tempest",
+   "start": 9.5,
+   "end": 10.62,
+   "src": "tempest.mp4",
+   "src_start": 1.0,
+   "speed": 2.0,
+   "cam": [
+    [
+     9.5,
+     1.32,
+     540,
+     640
+    ],
+    [
+     10.62,
+     1.22,
+     540,
+     680
+    ]
+   ],
+   "shake": [
+    [
+     9.62,
+     10,
+     0.35
+    ]
+   ]
+  },
+  {
+   "name": "maelstrom",
+   "start": 10.62,
+   "end": 11.45,
+   "src": "maelstrom.mp4",
+   "src_start": 4.2,
+   "speed": 1.5,
+   "cam": [
+    [
+     10.62,
+     1.3,
+     540,
+     760
+    ],
+    [
+     11.45,
+     1.4,
+     540,
+     760
+    ]
+   ]
+  },
+  {
+   "name": "meteor_big",
+   "start": 11.45,
+   "end": 12.58,
+   "src": "meteor.mp4",
+   "src_start": 5.45,
+   "speed": 1.0,
+   "cam": [
+    [
+     11.45,
+     1.55,
+     540,
+     560
+    ],
+    [
+     12.58,
+     1.75,
+     540,
+     560
+    ]
+   ],
+   "shake": [
+    [
+     11.67,
+     34,
+     0.8
+    ]
+   ]
+  },
+  {
+   "name": "keystone",
+   "start": 12.58,
+   "end": 14.62,
+   "src": "keystone.mp4",
+   "src_start": 0.35,
+   "speed": 1.0,
+   "cam": [
+    [
+     12.58,
+     1.35,
+     600,
+     900
+    ],
+    [
+     14.62,
+     1.6,
+     600,
+     880
+    ]
+   ]
+  },
+  {
+   "name": "plan",
+   "start": 14.62,
+   "end": 17.22,
+   "src": "plan.mp4",
+   "src_start": 0.5,
+   "speed": 2.0,
+   "cam": [
+    [
+     14.62,
+     1.0,
+     540,
+     960
+    ],
+    [
+     17.22,
+     1.03,
+     540,
+     960
+    ]
+   ]
+  },
+  {
+   "name": "share",
+   "start": 17.22,
+   "end": 18.7,
+   "src": "share.mp4",
+   "src_start": 0.9,
+   "speed": 1.8,
+   "cam": [
+    [
+     17.22,
+     1.3,
+     540,
+     930
+    ],
+    [
+     18.7,
+     1.38,
+     540,
+     930
+    ]
+   ]
+  },
+  {
+   "name": "rpg",
+   "start": 18.7,
+   "end": 22.45,
+   "src": "rpg.mp4",
+   "src_start": 0.0,
+   "speed": 1.0,
+   "cam": [
+    [
+     18.7,
+     1.0,
+     540,
+     960
+    ],
+    [
+     20.45,
+     1.08,
+     540,
+     880
+    ],
+    [
+     21.05,
+     1.5,
+     540,
+     700
+    ],
+    [
+     22.45,
+     1.58,
+     540,
+     690
+    ]
+   ]
+  },
+  {
+   "name": "combo",
+   "start": 22.45,
+   "end": 24.62,
+   "src": "combo.mp4",
+   "src_start": 0.4,
+   "speed": 1.0,
+   "cam": [
+    [
+     22.45,
+     1.12,
+     540,
+     960
+    ],
+    [
+     24.62,
+     1.2,
+     540,
+     940
+    ]
+   ]
+  },
+  {
+   "name": "title",
+   "start": 24.62,
+   "end": 27.0,
+   "src": "tree_open.mp4",
+   "src_start": 6.2,
+   "speed": 0.9,
+   "cam": [
+    [
+     24.62,
+     1.0,
+     540,
+     960
+    ],
+    [
+     27.0,
+     1.1,
+     540,
+     1000
+    ]
+   ],
+   "shake": [
+    [
+     24.66,
+     14,
+     0.5
+    ]
+   ]
+  },
+  {
+   "name": "cta_loop",
+   "start": 27.0,
+   "end": 30.351,
+   "src": "meteor.mp4",
+   "src_start": 1.05,
+   "speed": 1.0,
+   "cam": [
+    [
+     27.0,
+     1.0,
+     540,
+     900
+    ],
+    [
+     30.351,
+     1.15,
+     540,
+     760
+    ]
+   ],
+   "punch": false
+  }
+ ]
+}

@@ -1,0 +1,101 @@
+{
+ "duration": 30.351,
+ "lines": [
+  {
+   "i": 0,
+   "start": 0.15,
+   "end": 1.903,
+   "cap": "Minecraft doesn't have a skill tree..."
+  },
+  {
+   "i": 1,
+   "start": 2.123,
+   "end": 3.026,
+   "cap": "so I made one."
+  },
+  {
+   "i": 2,
+   "start": 3.326,
+   "end": 5.082,
+   "cap": "522 NODES."
+  },
+  {
+   "i": 3,
+   "start": 5.432,
+   "end": 6.642,
+   "cap": "6 schools of magic."
+  },
+  {
+   "i": 4,
+   "start": 6.722,
+   "end": 8.233,
+   "cap": "Start anywhere. Go anywhere."
+  },
+  {
+   "i": 5,
+   "start": 8.533,
+   "end": 9.443,
+   "cap": "30 ABILITIES."
+  },
+  {
+   "i": 6,
+   "start": 9.563,
+   "end": 10.567,
+   "cap": "Lightning storms."
+  },
+  {
+   "i": 7,
+   "start": 10.667,
+   "end": 11.41,
+   "cap": "Whirlpools."
+  },
+  {
+   "i": 8,
+   "start": 11.51,
+   "end": 12.15,
+   "cap": "METEORS!"
+  },
+  {
+   "i": 9,
+   "start": 12.6,
+   "end": 14.478,
+   "cap": "12 keystones that break the rules."
+  },
+  {
+   "i": 10,
+   "start": 14.778,
+   "end": 17.181,
+   "cap": "Plan your whole build before you spend a single point,"
+  },
+  {
+   "i": 11,
+   "start": 17.231,
+   "end": 18.485,
+   "cap": "and share it with ONE code."
+  },
+  {
+   "i": 12,
+   "start": 18.835,
+   "end": 22.278,
+   "cap": "Got RPG Player Skills? Your levels turn into skill points."
+  },
+  {
+   "i": 13,
+   "start": 22.578,
+   "end": 24.409,
+   "cap": "Fabric, Forge and NeoForge."
+  },
+  {
+   "i": 14,
+   "start": 24.659,
+   "end": 26.777,
+   "cap": "It's called Remnants: Skills and Powers."
+  },
+  {
+   "i": 15,
+   "start": 27.077,
+   "end": 29.451,
+   "cap": "Send this to the friend who always plays mage."
+  }
+ ]
+}

@@ -18,3 +18,4 @@ tools/*
 !tools/gen_textures.py
 marketing/source/.render-*.html
 secrets/
+marketing/reel/*.mp4

@@ -1,0 +1,222 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: Mont; src: url('fonts/Montserrat.ttf'); font-weight: 100 900; }
+@font-face { font-family: Anton; src: url('fonts/Anton-Regular.ttf'); }
+@font-face { font-family: Cinzel; src: url('../../../home/user/Elementals/marketing/source/fonts/cinzel.ttf'); }
+html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; overflow: hidden; }
+* { box-sizing: border-box; }
+.layer { position: absolute; inset: 0; }
+#vignette { background: radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 55%, rgba(0,0,0,.42) 100%); }
+#flash { background: #fff; opacity: 0; }
+#dim { background: radial-gradient(ellipse at 50% 42%, rgba(6,7,14,.55), rgba(6,7,14,.88)); opacity: 0; }
+
+/* captions */
+#cap { position: absolute; left: 110px; right: 110px; top: 1150px; display: flex; flex-wrap: wrap; justify-content: center;
+       gap: 4px 34px; font-family: Mont; font-weight: 900; text-transform: uppercase; text-align: center; line-height: 1.02;
+       transform-origin: 50% 50%; }
+#cap span { display: inline-block; color: #fff; font-size: 86px; letter-spacing: .5px;
+            -webkit-text-stroke: 12px #000; paint-order: stroke fill;
+            text-shadow: 0 8px 0 rgba(0,0,0,.55), 0 0 28px rgba(0,0,0,.45); transition: none; }
+#cap span.on { color: #ffd84a; }
+#cap.big span { font-size: 100px; }
+
+/* stat counters */
+.stat { position: absolute; left: 0; right: 0; top: 1020px; text-align: center; opacity: 0; transform-origin: 50% 60%; }
+.stat .num { font-family: Anton; font-size: 300px; line-height: .95; letter-spacing: 4px;
+             background: linear-gradient(180deg, #fff7d6 0%, #ffd84a 45%, #f39a1e 100%);
+             -webkit-background-clip: text; background-clip: text; color: transparent;
+             filter: drop-shadow(0 10px 0 rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(255,190,60,.45)); }
+.stat .lbl { font-family: Mont; font-weight: 900; font-size: 92px; color: #fff; letter-spacing: 6px; margin-top: -6px;
+             -webkit-text-stroke: 12px #000; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,.55); }
+
+/* loader pills */
+#loaders { position: absolute; left: 0; right: 0; top: 1080px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
+.pill { font-family: Mont; font-weight: 900; font-size: 74px; color: #fff; padding: 18px 54px 16px; border-radius: 999px;
+        background: rgba(10,12,22,.82); border: 5px solid var(--c); box-shadow: 0 0 40px var(--g), 0 12px 0 rgba(0,0,0,.45);
+        letter-spacing: 3px; opacity: 0; }
+#versions { font-family: Mont; font-weight: 800; font-size: 50px; color: #fff; letter-spacing: 2px; opacity: 0;
+            -webkit-text-stroke: 9px #000; paint-order: stroke fill; margin-top: 10px; }
+#loaderBg { position: absolute; left: 0; right: 0; top: 980px; height: 760px; opacity: 0;
+            background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55) 30%, rgba(0,0,0,.55) 70%, rgba(0,0,0,0)); }
+
+/* title card */
+#title { opacity: 0; }
+#logo { position: absolute; left: 50%; top: 520px; width: 470px; height: 470px; margin-left: -235px; border-radius: 50%;
+        box-shadow: 0 0 120px rgba(232,200,114,.55); }
+#t1 { position: absolute; left: 0; right: 0; top: 1050px; text-align: center; font-family: Cinzel; font-weight: 700;
+      font-size: 150px; letter-spacing: 10px;
+      background: linear-gradient(180deg, #fff4cf 0%, #f6dc94 40%, #e8c872 70%, #9a7a3c 100%);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 30px rgba(232,200,114,.5)); }
+#t2 { position: absolute; left: 0; right: 0; top: 1240px; text-align: center; font-family: Cinzel; font-weight: 700;
+      font-size: 66px; letter-spacing: 8px; color: #efe9d8; }
+#t3 { position: absolute; left: 0; right: 0; top: 1370px; text-align: center; font-family: Mont; font-weight: 800;
+      font-size: 40px; letter-spacing: 5px; color: #c9c2ae; }
+#rule { position: absolute; left: 50%; top: 1225px; width: 640px; height: 3px; margin-left: -320px;
+        background: linear-gradient(90deg, rgba(232,200,114,0), #e8c872 20%, #e8c872 80%, rgba(232,200,114,0)); }
+#shine { position: absolute; top: 1030px; height: 360px; width: 220px; left: -300px;
+         background: linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,.55), rgba(255,255,255,0));
+         mix-blend-mode: overlay; filter: blur(6px); }
+
+/* stickers */
+.sticker { position: absolute; left: 50%; font-family: Mont; font-weight: 900; color: #11131c; background: #ffd84a;
+           padding: 18px 44px 16px; border-radius: 26px; font-size: 56px; letter-spacing: 2px; white-space: nowrap;
+           box-shadow: 0 12px 0 rgba(0,0,0,.45), 0 0 50px rgba(255,216,74,.5); opacity: 0; transform-origin: 50% 50%; }
+#copied { top: 560px; }
+#rpgpill { top: 840px; background: #8cf08c; box-shadow: 0 12px 0 rgba(0,0,0,.45), 0 0 50px rgba(140,240,140,.55); }
+
+/* brand tag */
+#brand { position: absolute; left: 0; right: 0; top: 196px; text-align: center; font-family: Cinzel; font-weight: 700;
+         font-size: 40px; letter-spacing: 6px; color: #f6dc94; opacity: 0; 
+         text-shadow: 0 3px 0 rgba(0,0,0,.8), 0 0 18px rgba(0,0,0,.7); }
+
+/* CTA */
+#plane { position: absolute; left: 0; top: 0; width: 210px; height: 210px; opacity: 0; }
+</style></head>
+<body>
+<div id="vignette" class="layer"></div>
+<div id="dim" class="layer"></div>
+<div id="brand">REMNANTS · SKILLS AND POWERS</div>
+
+<div id="s522" class="stat"><div class="num">0</div><div class="lbl">NODES</div></div>
+<div id="s30" class="stat"><div class="num">0</div><div class="lbl">ABILITIES</div></div>
+
+<div id="loaderBg"></div>
+<div id="loaders">
+  <div class="pill" id="pFabric" style="--c:#dbd0b4;--g:rgba(219,208,180,.35)">FABRIC</div>
+  <div class="pill" id="pForge" style="--c:#7aa0ff;--g:rgba(122,160,255,.35)">FORGE</div>
+  <div class="pill" id="pNeo" style="--c:#ff9a3c;--g:rgba(255,154,60,.4)">NEOFORGE</div>
+  <div id="versions">1.20.1 · 1.21.1 · 26.2 · 26.3</div>
+</div>
+
+<div id="title" class="layer">
+  <img id="logo" src="../../../home/user/Elementals/marketing/source/logo.png">
+  <div id="t1">REMNANTS</div>
+  <div id="rule"></div>
+  <div id="t2">SKILLS AND POWERS</div>
+  <div id="t3">FREE ON MODRINTH &amp; CURSEFORGE</div>
+  <div id="shine"></div>
+</div>
+
+<div id="copied" class="sticker">BUILD CODE COPIED ✓</div>
+<div id="rpgpill" class="sticker">+1 SKILL POINT</div>
+
+<svg id="plane" viewBox="0 0 24 24"><path fill="#ffd84a" stroke="#000" stroke-width="1.2" stroke-linejoin="round"
+  d="M2.5 11.2 21 3.2c.6-.3 1.2.3.9.9l-8 18.5c-.3.7-1.3.6-1.5-.1l-2.1-7.3-7.3-2.1c-.7-.2-.8-1.2-.1-1.5Z"/>
+  <path d="m10.3 15.2 5.2-5.6" stroke="#000" stroke-width="1.2" stroke-linecap="round"/></svg>
+
+<div id="cap"></div>
+<div id="flash" class="layer"></div>
+
+<script>
+const CAPS = __CAPTIONS__;
+const WORDS = __WORDS__;
+const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
+const eo = x => 1 - Math.pow(1 - clamp(x), 3);
+const eio = x => { x = clamp(x); return x * x * (3 - 2 * x); };
+const back = x => { x = clamp(x); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
+const win = (t, a, b, fi = .15, fo = .15) => clamp((t - a) / fi) * clamp((b - t) / fo);
+const $ = id => document.getElementById(id);
+const wordAt = (txt, after) => (WORDS.find(w => w.w.toLowerCase().replace(/[^a-z0-9]/g, '').startsWith(txt) && w.start >= after) || {start: after}).start;
+
+let lastChunk = -1;
+function captions(t) {
+  const cap = $('cap');
+  const i = CAPS.findIndex(c => t >= c.start - 0.03 && t < c.end);
+  if (i < 0) { cap.style.opacity = 0; return; }
+  const c = CAPS[i];
+  if (i !== lastChunk) {
+    cap.innerHTML = c.words.map(w => `<span>${w.text}</span>`).join('');
+    cap.className = c.start < 2.2 ? 'big' : '';
+    lastChunk = i;
+  }
+  const spans = cap.querySelectorAll('span');
+  c.words.forEach((w, k) => {
+    const next = k + 1 < c.words.length ? c.words[k + 1].start : c.end;
+    const on = t >= w.start - 0.03 && t < next;
+    spans[k].classList.toggle('on', on);
+    const p = clamp((t - w.start + 0.03) / 0.12);
+    spans[k].style.transform = on ? `scale(${1 + 0.07 * Math.sin(Math.PI * clamp(p))})` : 'scale(1)';
+  });
+  const pop = back((t - c.start + 0.03) / 0.16);
+  cap.style.opacity = clamp((t - c.start + 0.03) / 0.05) * clamp((c.end - t) / 0.06);
+  cap.style.transform = `scale(${0.82 + 0.18 * pop})`;
+}
+
+function stat(id, t, a, b, n, countDur) {
+  const el = $(id);
+  const o = win(t, a, b, 0.08, 0.14);
+  el.style.opacity = o;
+  if (o <= 0) return;
+  el.querySelector('.num').textContent = Math.round(n * eo((t - a) / countDur));
+  const s = 0.7 + 0.3 * back((t - a) / 0.22);
+  el.style.transform = `scale(${s}) translateY(${(1 - eo((t - a) / .22)) * 40}px)`;
+}
+
+function sticker(id, t, a, b) {
+  const el = $(id);
+  el.style.opacity = win(t, a, b, 0.06, 0.15);
+  const s = 0.5 + 0.5 * back((t - a) / 0.2);
+  el.style.transform = `translateX(-50%) scale(${s}) rotate(${-4 + 4 * eo((t - a) / .3)}deg)`;
+}
+
+function frame(t) {
+  // flashes on impacts
+  let fl = 0;
+  for (const [at, peak] of [[0.85, .85], [11.67, .9], [24.62, .7]]) {
+    if (t >= at && t < at + 0.3) fl = Math.max(fl, peak * Math.pow(1 - (t - at) / 0.3, 2));
+  }
+  $('flash').style.opacity = fl;
+
+  $('brand').style.opacity = 0.75 * win(t, 3.4, 24.55, 0.3, 0.2);
+
+  stat('s522', t, 3.33, 5.40, 522, 0.95);
+  stat('s30', t, 8.50, 9.50, 30, 0.45);
+
+  // loader pills, each on its spoken word
+  const tFab = wordAt('fabric', 22.3), tForge = wordAt('forge', tFab + 0.1), tNeo = wordAt('neo', tForge + 0.1);
+  $('loaderBg').style.opacity = win(t, 22.45, 24.62, 0.2, 0.12);
+  [['pFabric', tFab, -1], ['pForge', tForge, 1], ['pNeo', tNeo, -1]].forEach(([id, at, dir]) => {
+    const el = $(id), p = eo((t - at + 0.04) / 0.22);
+    el.style.opacity = clamp((t - at + 0.04) / 0.08) * clamp((24.62 - t) / 0.12);
+    el.style.transform = `translateX(${dir * (1 - p) * 520}px) scale(${0.9 + 0.1 * back((t - at) / .25)})`;
+  });
+  const v = $('versions');
+  v.style.opacity = clamp((t - (tNeo + 0.3)) / 0.2) * clamp((24.62 - t) / 0.12);
+  v.style.transform = `translateY(${(1 - eo((t - tNeo - .3) / .3)) * 30}px)`;
+
+  // title card
+  const T0 = 24.62, T1 = 27.0;
+  const to = win(t, T0, T1, 0.12, 0.18);
+  $('title').style.opacity = to;
+  $('dim').style.opacity = 0.92 * win(t, T0, T1, 0.2, 0.2);
+  if (to > 0) {
+    const lp = back((t - T0 - 0.02) / 0.4);
+    $('logo').style.transform = `scale(${0.55 + 0.45 * lp}) rotate(${(1 - eo((t - T0) / .8)) * -40}deg)`;
+    $('logo').style.opacity = clamp((t - T0) / 0.15);
+    const p1 = eo((t - T0 - 0.15) / 0.45);
+    $('t1').style.opacity = clamp((t - T0 - 0.15) / 0.2);
+    $('t1').style.letterSpacing = `${10 + (1 - p1) * 40}px`;
+    $('rule').style.transform = `scaleX(${eo((t - T0 - 0.3) / 0.5)})`;
+    $('t2').style.opacity = clamp((t - T0 - 0.35) / 0.25);
+    $('t2').style.transform = `translateY(${(1 - eo((t - T0 - .35) / .35)) * 24}px)`;
+    $('t3').style.opacity = clamp((t - T0 - 0.8) / 0.3);
+    $('shine').style.left = `${-300 + 1700 * eio((t - T0 - 0.6) / 0.9)}px`;
+  }
+
+  sticker('copied', t, 18.05, 18.70);
+  sticker('rpgpill', t, 19.25, 20.90);
+
+  // CTA: a paper plane flies in and bobs above the captions; everything clears before the loop seam
+  const pl = $('plane'), pa = 27.05;
+  const pp = eo((t - pa) / 0.55);
+  const px = -260 + (435 + 260) * pp, py = 1500 - (1500 - 880) * pp + Math.sin((t - pa) * 5) * 10 * clamp((t - pa - .55) / .3);
+  pl.style.opacity = win(t, pa, 30.2, 0.1, 0.25);
+  pl.style.transform = `translate(${px}px, ${py}px) rotate(${-30 + 30 * pp}deg) scale(${1 + 0.06 * Math.sin((t - pa) * 6)})`;
+
+  captions(t);
+}
+window.frame = frame;
+</script>
+</body></html>
