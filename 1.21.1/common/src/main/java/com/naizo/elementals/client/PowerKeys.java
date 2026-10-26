@@ -11,11 +11,11 @@ import java.util.Locale;
 /** Key bindings. Defaults avoid vanilla keys, voice chat (V) and RPG Player Skills (K). Minecraft 1.21.1 edition. */
 public final class PowerKeys {
     public static final String CATEGORY = "key.categories.elementals";
-    public static final KeyMapping OPEN_TREE = new KeyMapping("key.elementals.open_tree", GLFW.GLFW_KEY_O, CATEGORY);
+    public static final KeyMapping OPEN_TREE = new KeyMapping("key.elementals.open_tree", GLFW.GLFW_KEY_I, CATEGORY);
     public static final KeyMapping[] CAST = {
             new KeyMapping("key.elementals.cast_1", GLFW.GLFW_KEY_R, CATEGORY),
-            new KeyMapping("key.elementals.cast_2", GLFW.GLFW_KEY_G, CATEGORY),
-            new KeyMapping("key.elementals.cast_3", GLFW.GLFW_KEY_Z, CATEGORY),
+            new KeyMapping("key.elementals.cast_2", GLFW.GLFW_KEY_Z, CATEGORY),
+            new KeyMapping("key.elementals.cast_3", GLFW.GLFW_KEY_B, CATEGORY),
             new KeyMapping("key.elementals.cast_4", GLFW.GLFW_KEY_H, CATEGORY),
     };
 

@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for contributing to Elementals.
+Thanks for contributing to Remnants | Skills and Powers (mod id `elementals`).
 
 ## Before you start
 
@@ -18,8 +18,15 @@ Thanks for contributing to Elementals.
 
 ## Coding expectations
 
-- Follow the existing patterns in the targeted version root. The version folders are intentionally isolated.
-- Do not port changes across versions with shared sources or symlinks.
+- Follow the existing patterns in the targeted version root. The version folders are isolated Gradle projects.
+- Version-independent code (the `core` package, abilities, the power manager, commands, the tree screen
+  logic and the HUD) is edited in `1.21.1/` only and copied with `tools/sync-shared.sh 1.20.1 26.2 26.3`.
+  The script lists every shared file. Everything else (Compat, StatApplier, entities, items that touch
+  Minecraft APIs, GuiCanvas, screens, key mappings and loader modules) is written per version.
+- The `core` package must not import Minecraft classes, so `CoreRegression` can run on a plain JVM.
+- Run `./gradlew build` in every root you touched. It runs `CoreRegression` as part of `check`.
+- For in-game checks, `-PextraMods=<dir>` (1.21.1 Fabric) loads extra mod jars such as RPG Player
+  Skills into `runClient`, and `-PclientArgs="..."` passes arguments to Forge and NeoForge clients.
 - Avoid committing generated jars, logs, run directories, secrets, or local IDE files.
 
 ## Reporting issues

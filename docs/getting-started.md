@@ -2,7 +2,7 @@
 
 ## Open the tree
 
-Press **O** to open the Remnant Constellation. The tree has 522 nodes in six schools around a gold
+Press **I** to open the Remnant Constellation. The tree has 522 nodes in six schools around a gold
 inner ring:
 
 | School | Element | Plays like |
@@ -40,12 +40,15 @@ choose, click a slot at the bottom of the tree screen, or hover an unlocked abil
 
 | Key | Action |
 | --- | --- |
+| I | Open the skill tree |
 | R | Cast slot 1 |
-| G | Cast slot 2 |
-| Z | Cast slot 3 |
+| Z | Cast slot 2 |
+| B | Cast slot 3 |
 | H | Cast slot 4 |
 
-All keys can be rebound under **Controls → Remnants | Skills and Powers**. Abilities cost **Essence**
+None of these keys are bound by vanilla on any supported version (26.x took **O** for the Friends List
+and **G** for Quick Actions, so they are avoided). All keys can be rebound under
+**Controls → Remnants | Skills and Powers**. Abilities cost **Essence**
 (the blue bar above the ability bar), which refills over time.
 
 ## Earning points

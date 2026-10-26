@@ -16,6 +16,10 @@ neoForge {
         }
         client {
             client()
+            // Optional: -PclientArgs="--username Dev --quickPlayMultiplayer localhost" for scripted test runs.
+            if (project.hasProperty('clientArgs')) {
+                programArguments.addAll project.property('clientArgs').split(' ')
+            }
             gameDirectory = this.mkdir(this.file('runs/client'))
         }
         data {

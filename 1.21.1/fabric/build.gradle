@@ -10,6 +10,11 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+    // Optional: -PextraMods=<dir> puts every jar in <dir> on the dev runtime
+    // (e.g. Remnants | RPG Player Skills + JAUML to test the integration).
+    if (project.hasProperty('extraMods')) {
+        modLocalRuntime fileTree(dir: project.property('extraMods'), include: '*.jar')
+    }
 }
 
 loom {

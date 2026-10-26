@@ -13,11 +13,11 @@ import java.util.Locale;
 /** Key bindings. Defaults avoid vanilla keys, voice chat (V) and RPG Player Skills (K). Minecraft 26.3 edition (SDL key codes). */
 public final class PowerKeys {
     public static final KeyMapping.Category CATEGORY = KeyMapping.Category.register(Compat.id(Elementals.MOD_ID, "powers"));
-    public static final KeyMapping OPEN_TREE = new KeyMapping("key.elementals.open_tree", InputConstants.KEY_O, CATEGORY);
+    public static final KeyMapping OPEN_TREE = new KeyMapping("key.elementals.open_tree", InputConstants.KEY_I, CATEGORY);
     public static final KeyMapping[] CAST = {
             new KeyMapping("key.elementals.cast_1", InputConstants.KEY_R, CATEGORY),
-            new KeyMapping("key.elementals.cast_2", InputConstants.KEY_G, CATEGORY),
-            new KeyMapping("key.elementals.cast_3", InputConstants.KEY_Z, CATEGORY),
+            new KeyMapping("key.elementals.cast_2", InputConstants.KEY_Z, CATEGORY),
+            new KeyMapping("key.elementals.cast_3", InputConstants.KEY_B, CATEGORY),
             new KeyMapping("key.elementals.cast_4", InputConstants.KEY_H, CATEGORY),
     };
 

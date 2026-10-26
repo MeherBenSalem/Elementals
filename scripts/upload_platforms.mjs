@@ -1,80 +1,83 @@
 /**
- * Upload Elementals jars from all-jars/ to Modrinth + CurseForge.
+ * Upload Remnants | Skills and Powers jars from all-jars/ to Modrinth + CurseForge.
+ * One Modrinth version and one CurseForge file per loader and Minecraft version.
+ *
+ *   node --test scripts/upload_platforms.test.mjs
+ *   node scripts/upload_platforms.mjs --version 2.0.0 --dry-run
+ *   node scripts/upload_platforms.mjs --version 2.0.0 --require-all-targets
+ *
+ * The changelog defaults to patchnotes/<version>.md. Uploads already recorded in
+ * .release-upload-state.json are skipped, so a failed run can be resumed.
  */
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
+import { CURSEFORGE_ID, JAR_PREFIX, LOADER_IDS, MOD_TITLE, MODRINTH_ID,
+  assertCompleteRelease, curseforgeMetadata, modrinthMetadata, normalizeVersion, parseJar } from "./release_metadata.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
-
-const MODRINTH_ID = "RFO8VXZx";
-const CURSEFORGE_ID = "1228643";
-const MOD_TITLE = "Elementals";
 const JAR_DIR = path.join(ROOT, "all-jars");
 const RELEASE_STATE_PATH = path.join(ROOT, ".release-upload-state.json");
 
-async function loadEnv() {
+function loadEnv() {
   const candidates = [
     path.join(ROOT, "secrets", "local.env"),
     path.join(process.env.USERPROFILE || "", "NightBeam-Knowledge-Base", "secrets", "local.env"),
-    "C:\\Users\\mahou\\NightBeam-Knowledge-Base\\secrets\\local.env",
+    path.join(process.env.USERPROFILE || "", "Desktop", "local.env"),
   ];
   for (const envPath of candidates) {
     if (!fs.existsSync(envPath)) continue;
-    const text = fs.readFileSync(envPath, "utf8");
-    for (const line of text.split(/\r?\n/)) {
+    for (const line of fs.readFileSync(envPath, "utf8").split(/\r?\n/)) {
       const m = line.match(/^([^#=]+)=(.*)$/);
-      if (!m) continue;
-      const k = m[1].trim();
-      const v = m[2].trim();
-      if (!process.env[k]) process.env[k] = v;
+      if (m && !process.env[m[1].trim()]) process.env[m[1].trim()] = m[2].trim();
     }
     console.log("Loaded secrets from", envPath);
     return;
   }
 }
 
-function parseArgs(argv) {
-  const out = { curseforgeOnly: false, modrinthOnly: false, dryRun: false };
+export function parseArgs(argv) {
+  const out = { curseforgeOnly: false, modrinthOnly: false, dryRun: false, requireAllTargets: false, jarDir: JAR_DIR };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
-    if (a === "--version") out.version = argv[++i];
-    else if (a === "--changelog-file") out.changelogFile = argv[++i];
-    else if (a === "--curseforge-only") out.curseforgeOnly = true;
+    if (["--version", "--changelog-file", "--jar-dir"].includes(a)) {
+      const value = argv[++i];
+      if (!value || value.startsWith("--")) throw new Error(`Missing value for ${a}`);
+      if (a === "--version") out.version = value;
+      else if (a === "--changelog-file") out.changelogFile = value;
+      else out.jarDir = path.resolve(value);
+    } else if (a === "--curseforge-only") out.curseforgeOnly = true;
     else if (a === "--modrinth-only") out.modrinthOnly = true;
+    else if (a === "--require-all-targets") out.requireAllTargets = true;
     else if (a === "--dry-run") out.dryRun = true;
     else throw new Error(`Unknown arg ${a}`);
   }
-  if (!out.version) throw new Error("--version required");
+  out.version = normalizeVersion(out.version);
   return out;
 }
 
-function parseJar(jar) {
-  const name = path.basename(jar);
-  const m = name.match(/^elementals-(fabric|forge|neoforge)-(.+)-(\d+\.\d+\.\d+)\.jar$/i);
-  if (!m) throw new Error(`Cannot parse jar name: ${name}`);
-  return { jar, name, loader: m[1].toLowerCase(), game: m[2], version: m[3] };
-}
-
-function collectJars(version) {
-  if (!fs.existsSync(JAR_DIR)) throw new Error(`Missing ${JAR_DIR}; run buildAll first`);
-  return fs
-    .readdirSync(JAR_DIR)
-    .filter((n) => n.startsWith("elementals-") && n.endsWith(`-${version}.jar`))
-    .map((n) => path.join(JAR_DIR, n))
+export function collectReleases(jarDir, version) {
+  if (!fs.existsSync(jarDir)) throw new Error(`Missing ${jarDir}; run ./gradlew buildAll first`);
+  const jars = fs.readdirSync(jarDir)
+    .filter((n) => n.startsWith(JAR_PREFIX) && n.endsWith(`-${version}.jar`))
+    .map((n) => path.join(jarDir, n))
     .sort();
+  if (!jars.length) throw new Error(`No ${JAR_PREFIX}*-${version}.jar in ${jarDir}`);
+  const parsed = jars.map((jar) => parseJar(jar, version));
+  const targets = parsed.map((p) => `${p.loader}:${p.game}`);
+  if (new Set(targets).size !== targets.length) throw new Error("Duplicate release target");
+  return parsed;
 }
 
-function readChangelog(version, changelogFile) {
-  for (const f of [changelogFile, path.join(ROOT, "CHANGELOG.md")].filter(Boolean)) {
+export function readChangelog(version, changelogFile) {
+  for (const f of [changelogFile, path.join(ROOT, "patchnotes", `${version}.md`)].filter(Boolean)) {
     if (fs.existsSync(f)) return fs.readFileSync(f, "utf8");
   }
-  return `## ${MOD_TITLE} ${version}\n\nMultiLoader release.`;
+  return `## ${MOD_TITLE} ${version}\n\nSee CHANGELOG.md.`;
 }
 
-function loadReleaseState() {
-  if (!fs.existsSync(RELEASE_STATE_PATH)) return { uploads: [] };
+function loadState() {
   try {
     const parsed = JSON.parse(fs.readFileSync(RELEASE_STATE_PATH, "utf8"));
     if (Array.isArray(parsed.uploads)) return parsed;
@@ -82,157 +85,111 @@ function loadReleaseState() {
   return { uploads: [] };
 }
 
-function saveReleaseState(state) {
+function recorded(state, platform, version, release) {
+  return state.uploads.some((e) => e.platform === platform && e.version === version && e.fileName === release.name);
+}
+
+function record(state, platform, version, release, remoteId) {
+  if (recorded(state, platform, version, release)) return;
+  state.uploads.push({ platform, version, loader: release.loader, game: release.game, fileName: release.name, remoteId,
+    recordedAt: new Date().toISOString() });
   fs.writeFileSync(RELEASE_STATE_PATH, `${JSON.stringify(state, null, 2)}\n`, "utf8");
 }
 
-function hasRecordedUpload(state, platform, version, parsedJar) {
-  return state.uploads.some(
-    (e) => e.platform === platform && e.version === version && e.fileName === parsedJar.name,
-  );
-}
-
-function recordUpload(state, platform, version, parsedJar, remoteId) {
-  if (hasRecordedUpload(state, platform, version, parsedJar)) return;
-  state.uploads.push({
-    platform,
-    version,
-    loader: parsedJar.loader,
-    game: parsedJar.game,
-    fileName: parsedJar.name,
-    remoteId,
-    recordedAt: new Date().toISOString(),
-  });
-  saveReleaseState(state);
-}
-
-async function uploadToModrinth(parsed, version, changelog, token, dryRun, state) {
-  for (const parsedJar of parsed) {
-    const body = {
-      name: `${version} · ${parsedJar.loader} · ${parsedJar.game}`,
-      version_number: `${version}+${parsedJar.loader}-${parsedJar.game}`,
-      changelog,
-      dependencies: [],
-      game_versions: [parsedJar.game],
-      version_type: "release",
-      loaders: [parsedJar.loader],
-      featured: false,
-      status: "listed",
-      project_id: MODRINTH_ID,
-      file_parts: ["file_0"],
-      primary_file: "file_0",
-    };
-    if (hasRecordedUpload(state, "modrinth", version, parsedJar)) {
-      console.log("Modrinth skip", parsedJar.name);
-      continue;
-    }
-    if (dryRun) {
-      console.log("[dry-run] Modrinth", body.version_number, parsedJar.name);
-      continue;
-    }
-    const form = new FormData();
-    form.append("data", JSON.stringify(body));
-    form.append("file_0", new Blob([fs.readFileSync(parsedJar.jar)]), parsedJar.name);
-    const res = await fetch("https://api.modrinth.com/v2/version", {
-      method: "POST",
-      headers: { Authorization: token },
-      body: form,
-    });
+async function postWithRetry(url, init, label) {
+  for (let attempt = 1; ; attempt++) {
+    const res = await fetch(url, init());
     const text = await res.text();
-    if (!res.ok) throw new Error(`Modrinth ${res.status} ${parsedJar.name} ${text.slice(0, 500)}`);
-    let remoteId = null;
-    try {
-      remoteId = JSON.parse(text).id ?? null;
-    } catch {}
-    recordUpload(state, "modrinth", version, parsedJar, remoteId);
-    console.log("Modrinth OK", body.version_number, parsedJar.name);
+    if (res.ok) {
+      try { return JSON.parse(text).id ?? null; } catch { return null; }
+    }
+    if ((res.status === 429 || res.status >= 500) && attempt < 4) {
+      await new Promise((r) => setTimeout(r, 15000 * attempt));
+      continue;
+    }
+    throw new Error(`${label} ${res.status} ${text.slice(0, 500)}`);
   }
 }
 
-async function uploadToCurseForge(parsed, version, changelog, token, apiKey, dryRun, state) {
-  const LOADER_IDS = { fabric: 7499, forge: 7498, neoforge: 10150 };
-  const legacyPayload = await fetch("https://minecraft.curseforge.com/api/game/versions", {
+async function uploadModrinth(releases, version, changelog, state) {
+  const projectId = process.env.MODRINTH_ID || MODRINTH_ID;
+  for (const release of releases) {
+    if (recorded(state, "modrinth", version, release)) {
+      console.log("Modrinth skip", release.name);
+      continue;
+    }
+    const data = modrinthMetadata(release, { version, changelog, projectId });
+    const id = await postWithRetry("https://api.modrinth.com/v2/version", () => {
+      const form = new FormData();
+      form.append("data", JSON.stringify(data));
+      form.append("file_0", new Blob([fs.readFileSync(release.jar)]), release.name);
+      return { method: "POST", headers: { Authorization: process.env.MODRINTH_TOKEN }, body: form };
+    }, `Modrinth ${release.name}`);
+    record(state, "modrinth", version, release, id);
+    console.log("Modrinth OK", data.version_number);
+  }
+}
+
+async function uploadCurseForge(releases, version, changelog, state) {
+  const projectId = process.env.CURSEFORGE_ID || CURSEFORGE_ID;
+  const token = process.env.CURSEFORGE_TOKEN;
+  const payload = await fetch("https://minecraft.curseforge.com/api/game/versions", {
     headers: { "X-Api-Token": token },
   }).then((r) => r.json());
-  const legacyFlat = Array.isArray(legacyPayload) ? legacyPayload : legacyPayload?.data || [];
-  const clientId = legacyFlat.find((v) => v.name === "Client")?.id;
-  const serverId = legacyFlat.find((v) => v.name === "Server")?.id;
-  if (!clientId || !serverId) throw new Error("CurseForge Client/Server version ids missing");
-
-  for (const parsedJar of parsed) {
-    const loaderId = LOADER_IDS[parsedJar.loader];
-    if (!loaderId) throw new Error(`Unknown loader ${parsedJar.loader}`);
-    const gameHit = legacyFlat.find((v) => v.name === parsedJar.game);
-    if (!gameHit) throw new Error(`No CurseForge game version for ${parsedJar.game}`);
-    const meta = {
-      changelog,
-      changelogType: "markdown",
-      displayName: `${version} · ${parsedJar.loader} · ${parsedJar.game}`,
-      gameVersions: [clientId, serverId, loaderId, gameHit.id],
-      releaseType: "release",
-    };
-    if (hasRecordedUpload(state, "curseforge", version, parsedJar)) {
-      console.log("CurseForge skip", parsedJar.name);
+  const versions = Array.isArray(payload) ? payload : payload?.data || [];
+  const client = versions.find((v) => v.name === "Client")?.id;
+  const server = versions.find((v) => v.name === "Server")?.id;
+  if (!client || !server) throw new Error("CurseForge Client/Server version ids missing");
+  for (const release of releases) {
+    if (recorded(state, "curseforge", version, release)) {
+      console.log("CurseForge skip", release.name);
       continue;
     }
-    if (dryRun) {
-      console.log("[dry-run] CurseForge", meta.displayName, parsedJar.name);
-      continue;
-    }
-    const cfForm = new FormData();
-    cfForm.append("metadata", JSON.stringify(meta));
-    cfForm.append("file", new Blob([fs.readFileSync(parsedJar.jar)]), parsedJar.name);
-    for (let attempt = 1; attempt <= 4; attempt++) {
-      const res = await fetch(
-        `https://minecraft.curseforge.com/api/projects/${CURSEFORGE_ID}/upload-file`,
-        { method: "POST", headers: { "X-Api-Token": token }, body: cfForm },
-      );
-      const text = await res.text();
-      if (res.ok) {
-        let remoteId = null;
-        try {
-          remoteId = JSON.parse(text).id ?? null;
-        } catch {}
-        recordUpload(state, "curseforge", version, parsedJar, remoteId);
-        console.log("CurseForge OK", meta.displayName, parsedJar.name);
-        break;
-      }
-      if ((res.status === 429 || res.status === 503) && attempt < 4) {
-        await new Promise((r) => setTimeout(r, 15000 * attempt));
-        continue;
-      }
-      throw new Error(`CurseForge ${res.status} ${parsedJar.name} ${text.slice(0, 500)}`);
-    }
+    const game = versions.find((v) => v.name === release.game);
+    if (!game) throw new Error(`No CurseForge game version for ${release.game}`);
+    const meta = curseforgeMetadata(release, {
+      version, changelog, gameVersionIds: [client, server, LOADER_IDS[release.loader], game.id],
+    });
+    const id = await postWithRetry(`https://minecraft.curseforge.com/api/projects/${projectId}/upload-file`, () => {
+      const form = new FormData();
+      form.append("metadata", JSON.stringify(meta));
+      form.append("file", new Blob([fs.readFileSync(release.jar)]), release.name);
+      return { method: "POST", headers: { "X-Api-Token": token }, body: form };
+    }, `CurseForge ${release.name}`);
+    record(state, "curseforge", version, release, id);
+    console.log("CurseForge OK", meta.displayName);
   }
 }
 
 async function main() {
-  await loadEnv();
   const args = parseArgs(process.argv);
-  const version = args.version.replace(/^v/, "");
+  const version = args.version;
+  const releases = collectReleases(args.jarDir, version);
+  if (args.requireAllTargets) assertCompleteRelease(releases);
   const changelog = readChangelog(version, args.changelogFile);
-  const state = loadReleaseState();
-  const jars = collectJars(version);
-  if (!jars.length) throw new Error(`No elementals jars for version ${version} in all-jars/`);
-  const parsed = jars.map(parseJar);
-
-  const { MODRINTH_TOKEN, CURSEFORGE_TOKEN, CURSEFORGE_API_KEY } = process.env;
-  if (!MODRINTH_TOKEN || !CURSEFORGE_TOKEN || !CURSEFORGE_API_KEY) {
-    throw new Error("Set MODRINTH_TOKEN, CURSEFORGE_TOKEN, CURSEFORGE_API_KEY");
+  console.log(`${MOD_TITLE} ${version}: ${releases.length} jars`);
+  for (const r of releases) console.log(" ", r.name, "->", r.loader, r.game);
+  if (args.dryRun) {
+    // A preview never loads secrets, reads jar bytes or calls either API.
+    for (const r of releases) {
+      console.log("[dry-run] Modrinth", JSON.stringify({ ...modrinthMetadata(r, { version, changelog: "…" }) }));
+      console.log("[dry-run] CurseForge", JSON.stringify(curseforgeMetadata(r, { version, changelog: "…", gameVersionIds: [] })));
+    }
+    return;
   }
-
-  console.log(`Uploading ${MOD_TITLE} ${version} (${parsed.length} jars)`);
-  for (const p of parsed) console.log(" ", p.name, "->", p.loader, p.game);
-
-  if (!args.curseforgeOnly) {
-    await uploadToModrinth(parsed, version, changelog, MODRINTH_TOKEN, args.dryRun, state);
+  loadEnv();
+  const { MODRINTH_TOKEN, CURSEFORGE_TOKEN } = process.env;
+  if ((!args.curseforgeOnly && !MODRINTH_TOKEN) || (!args.modrinthOnly && !CURSEFORGE_TOKEN)) {
+    throw new Error("Set MODRINTH_TOKEN and CURSEFORGE_TOKEN");
   }
-  if (!args.modrinthOnly) {
-    await uploadToCurseForge(parsed, version, changelog, CURSEFORGE_TOKEN, CURSEFORGE_API_KEY, args.dryRun, state);
-  }
+  const state = loadState();
+  if (!args.curseforgeOnly) await uploadModrinth(releases, version, changelog, state);
+  if (!args.modrinthOnly) await uploadCurseForge(releases, version, changelog, state);
 }
 
-main().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

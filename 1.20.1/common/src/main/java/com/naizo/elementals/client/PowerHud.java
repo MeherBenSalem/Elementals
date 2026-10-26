@@ -16,7 +16,10 @@ public final class PowerHud {
     private PowerHud() {
     }
 
-    public static void render(Canvas c, long gameTime, float partialTick, IntFunction<String> castKey, String treeKey, boolean hudHidden) {
+    /**
+     * @param offhandRight true when the vanilla offhand slot is drawn right of the hotbar (left-handed with an offhand item)
+     */
+    public static void render(Canvas c, long gameTime, float partialTick, IntFunction<String> castKey, String treeKey, boolean hudHidden, boolean offhandRight) {
         if (!ClientPowers.ready || hudHidden) {
             return;
         }
@@ -30,7 +33,7 @@ public final class PowerHud {
         float size = 20;
         float gap = 2;
         float total = PowerProfile.SLOTS * size + (PowerProfile.SLOTS - 1) * gap;
-        float x0 = w / 2f + 91 + 8;
+        float x0 = w / 2f + 91 + 8 + (offhandRight ? 29 : 0);
         float y0 = h - 22;
         if (x0 + total > w - 4) {
             x0 = w / 2f - total / 2f;

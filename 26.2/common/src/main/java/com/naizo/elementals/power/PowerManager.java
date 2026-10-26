@@ -116,8 +116,11 @@ public final class PowerManager {
     }
 
     public static void serverStopping(MinecraftServer stopping) {
-        for (ServerPlayer player : stopping.getPlayerList().getPlayers()) {
-            save(player);
+        // The player list is null when the server fails before it finishes starting.
+        if (stopping.getPlayerList() != null) {
+            for (ServerPlayer player : stopping.getPlayerList().getPlayers()) {
+                save(player);
+            }
         }
         PROFILES.clear();
         SHEETS.clear();

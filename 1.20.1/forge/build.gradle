@@ -19,6 +19,10 @@ legacyForge {
     runs {
         client {
             client()
+            // Optional: -PclientArgs="--username Dev --quickPlayMultiplayer localhost" for scripted test runs.
+            if (project.hasProperty('clientArgs')) {
+                programArguments.addAll project.property('clientArgs').split(' ')
+            }
         }
         data {
             data()

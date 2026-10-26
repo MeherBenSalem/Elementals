@@ -83,6 +83,7 @@ public final class TreeView {
     private String lastQuery = "";
     private int matchIndex = -1;
     private boolean statsOpen;
+    private float statsScroll;
     private boolean shareOpen;
     private int pickerSlot = -1;
     private boolean dragging;
@@ -97,6 +98,9 @@ public final class TreeView {
     private final float[] stars = new float[260 * 4];
     private double minX, minY, maxX, maxY;
     private SkillTree boundsFor;
+    // Screen layout, recomputed every frame so every GUI scale fits (down to 426x240: 720p at "Auto").
+    private boolean compact;
+    private float panelW, miniSize, btnW, btnH, btnGap, slotSize, slotGap, loadX, loadY;
 
     private record Button(float x0, float y0, float x1, float y1, Runnable action, String tooltip) {
         boolean contains(double x, double y) {
@@ -584,6 +588,11 @@ public final class TreeView {
         if (delta == 0) {
             return false;
         }
+        float[] stats = statsRect();
+        if (statsOpen && x >= stats[0] && x < stats[2] && y >= stats[1] && y < stats[3]) {
+            statsScroll -= (float) (delta * 18);
+            return true;
+        }
         targetZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, targetZoom * (delta > 0 ? 1.18 : 1 / 1.18)));
         zoomAnchorX = x;
         zoomAnchorY = y;
@@ -692,6 +701,7 @@ public final class TreeView {
             return;
         }
         computeBounds();
+        layout();
         SkillNode hover = (pickerSlot < 0 && !overUi(mouseX, mouseY)) ? nodeAt(mouseX, mouseY) : null;
         hovered = hover == null ? null : hover.id;
         hoverPath = hover == null ? List.of() : tree().pathTo(effective(), hover.id);
@@ -723,17 +733,17 @@ public final class TreeView {
     }
 
     private boolean overUi(double x, double y) {
-        if (y < 30 || (statsOpen && x > w - 200 && y < h - 136) || minimapContains(x, y)) {
+        float[] stats = statsRect();
+        if (y < 30 || (statsOpen && x >= stats[0] && y < stats[3]) || minimapContains(x, y)) {
             return true;
         }
         if (shareOpen && x >= w / 2.0 - 130 && x < w / 2.0 + 130 && y >= h / 2.0 - 60 && y < h / 2.0 + 56) {
             return true;
         }
-        if (x < 180 && y > h - 46) {
+        if (x < panelW + 8 && y > h - 46) {
             return true;
         }
-        float loadout = PowerProfile.SLOTS * 30;
-        if (x > w / 2.0 - loadout / 2 - 4 && x < w / 2.0 + loadout / 2 + 4 && y > h - 52) {
+        if (x > loadX - 4 && x < loadX + loadoutWidth() + 4 && y > loadY - 12 && y < loadY + slotSize + 10) {
             return true;
         }
         for (Button b : buttons) {
@@ -742,6 +752,40 @@ public final class TreeView {
             }
         }
         return false;
+    }
+
+    private void layout() {
+        compact = w < 640 || h < 330;
+        panelW = compact ? 150 : 172;
+        miniSize = compact ? Math.min(84, h * 0.32f) : 118;
+        btnW = compact ? 52 : 58;
+        btnH = compact ? 14 : 16;
+        btnGap = compact ? 3 : 4;
+        slotSize = compact ? 20 : 24;
+        slotGap = compact ? 4 : 6;
+        float total = loadoutWidth();
+        float right = buttonsX() - 8 - (plan.isEmpty() ? 0 : btnW + 6);
+        float left = panelW + 14;
+        loadY = h - slotSize - 16;
+        loadX = Math.max(left, Math.min(right - total, w / 2f - total / 2f));
+        if (loadX + total > right) {
+            // No room on the bottom row: the loadout sits above the level panel instead.
+            loadX = 8;
+            loadY = h - 46 - slotSize - 14;
+        }
+    }
+
+    private float loadoutWidth() {
+        return PowerProfile.SLOTS * slotSize + (PowerProfile.SLOTS - 1) * slotGap;
+    }
+
+    private float buttonsX() {
+        return w - miniSize - 8 - 6 - btnW;
+    }
+
+    private float[] statsRect() {
+        float buttonsTop = h - 8 - btnH - 5 * (btnH + btnGap);
+        return new float[]{w - Math.min(200, w * 0.45f), 36, w - 4, buttonsTop - 6};
     }
 
     private void animate() {
@@ -945,45 +989,71 @@ public final class TreeView {
     private void drawTopBar(Canvas c, long millis) {
         c.gradient(0, 0, w, 30, 0xF00A0B13, 0xC00A0B13);
         c.fill(0, 30, w, 31, Canvas.alpha(GOLD, 0.45f));
-        c.text("REMNANTS", 8, 5, 1.2f, Canvas.alpha(GOLD, 1), true);
-        c.text("SKILLS AND POWERS", 8 + c.textWidth("REMNANTS") * 1.2f + 6, 7, 0.85f, 0xFFC9C2AE, true);
-        School origin = ClientPowers.profile.originSchool();
-        String originText = origin == School.NONE ? "Choose an origin: click any glowing start node" : "Origin: " + origin.displayName;
-        c.text(originText, 8, 18, 0.75f, origin == School.NONE ? Canvas.alpha(GOLD, 0.9f) : Canvas.alpha(origin.color, 1), false);
+        float sw = Math.min(170, w / 4f);
+        float searchX = w - sw - 8;
         int available = availableAfter();
         int staged = pending.isEmpty() ? 0 : tree().cost(pending);
         String points = available + (available == 1 ? " SKILL POINT" : " SKILL POINTS");
-        float scale = 1.25f;
+        float pointsW = c.textWidth(points) * 1.25f;
+        float titleEnd = 8 + c.textWidth("REMNANTS") * 1.2f;
+        c.text("REMNANTS", 8, 5, 1.2f, Canvas.alpha(GOLD, 1), true);
+        String subtitle = "SKILLS AND POWERS";
+        if (titleEnd + 6 + c.textWidth(subtitle) * 0.85f + 8 < w / 2f - pointsW / 2) {
+            c.text(subtitle, titleEnd + 6, 7, 0.85f, 0xFFC9C2AE, true);
+            titleEnd += 6 + c.textWidth(subtitle) * 0.85f;
+        }
+        School origin = ClientPowers.profile.originSchool();
+        String originText = origin == School.NONE
+                ? (compact ? "Pick an origin: click a glowing start" : "Choose an origin: click any glowing start node")
+                : "Origin: " + origin.displayName;
+        c.text(originText, 8, 18, 0.75f, origin == School.NONE ? Canvas.alpha(GOLD, 0.9f) : Canvas.alpha(origin.color, 1), false);
         int color = available > 0 ? Canvas.alpha(GOLD, 1) : 0xFFB8B2A2;
-        c.centered(points, w / 2f, 5, scale, color, true);
-        String sub = staged > 0 || !refunds.isEmpty()
-                ? (staged > 0 ? staged + " staged" : "") + (staged > 0 && !refunds.isEmpty() ? " | " : "") + (!refunds.isEmpty() ? refunds.size() + " to refund" : "") + "  -  Enter to apply"
-                : "Click: allocate path   Right-click: refund   Shift-click: plan   Scroll: zoom";
-        c.centered(sub, w / 2f, 19, 0.7f, staged > 0 || !refunds.isEmpty() ? Canvas.alpha(PENDING, 1) : DIM, false);
-        float sw = Math.min(170, w / 4f);
-        search.draw(c, w - sw - 8, 6, w - 8, 24, millis, GOLD);
-        buttons.add(new Button(w - sw - 8, 6, w - 8, 24, () -> {
+        c.centered(points, fitCenter(w / 2f, pointsW, titleEnd + 8, searchX - 8), 5, 1.25f, color, true);
+        boolean changes = staged > 0 || !refunds.isEmpty();
+        String[] hints = changes
+                ? new String[]{
+                        (staged > 0 ? staged + " staged" : "") + (staged > 0 && !refunds.isEmpty() ? " | " : "") + (!refunds.isEmpty() ? refunds.size() + " to refund" : "") + "  -  Enter to apply",
+                        "Enter to apply"}
+                : new String[]{
+                        "Click: allocate path   Right-click: refund   Shift-click: plan   Scroll: zoom",
+                        "Click: allocate   Right-click: refund   Shift: plan",
+                        "Right-click: refund"};
+        float hintMin = 8 + c.textWidth(originText) * 0.75f + 10;
+        for (String hint : hints) {
+            float hw = c.textWidth(hint) * 0.7f;
+            if (hw <= searchX - 10 - hintMin) {
+                c.centered(hint, fitCenter(w / 2f, hw, hintMin, searchX - 10), 19, 0.7f, changes ? Canvas.alpha(PENDING, 1) : DIM, false);
+                break;
+            }
+        }
+        search.draw(c, searchX, 6, w - 8, 24, millis, GOLD);
+        buttons.add(new Button(searchX, 6, w - 8, 24, () -> {
             search.focused = true;
             code.focused = false;
         }, null));
         if (!matches.isEmpty() || !search.text.isEmpty()) {
             String count = matches.isEmpty() ? "no match" : (matchIndex + 1) + "/" + matches.size() + "  Enter: next";
-            c.text(count, w - sw - 8 - c.textWidth(count) * 0.7f - 6, 12, 0.7f, matches.isEmpty() ? 0xFFFF8070 : DIM, false);
+            c.text(count, w - 8 - c.textWidth(count) * 0.6f, 25.5f, 0.6f, matches.isEmpty() ? 0xFFFF8070 : DIM, false);
         }
+    }
+
+    /** Centres a block of the given width on {@code ideal}, nudged to stay inside [min, max]. */
+    private static float fitCenter(float ideal, float width, float min, float max) {
+        return Math.max(min + width / 2, Math.min(max - width / 2, ideal));
     }
 
     private void drawBottomLeft(Canvas c) {
         PowerProfile profile = ClientPowers.profile;
         float x = 8;
         float y = h - 40;
-        c.panel(x - 2, y - 4, x + 170, h - 6, 0x663A3F55);
+        c.panel(x - 2, y - 4, x + panelW - 2, h - 6, 0x663A3F55);
         if (ClientPowers.replaceMode()) {
             c.text("RPG Level " + profile.rasLevel, x + 2, y, 1, Canvas.alpha(GOLD, 1), true);
-            c.text("Skill points from Remnants | RPG Player Skills", x + 2, y + 12, 0.6f, DIM, false);
+            c.text(compact ? "Points from RPG Player Skills" : "Skill points from Remnants | RPG Player Skills", x + 2, y + 12, 0.6f, DIM, false);
         } else {
             c.text("Power Level " + profile.level, x + 2, y, 1, Canvas.alpha(GOLD, 1), true);
             double need = com.naizo.elementals.core.Progression.xpToNext(ClientPowers.config, profile.level);
-            float bar = 160;
+            float bar = panelW - 12;
             float fill = profile.level >= ClientPowers.config.maxLevel ? bar : (float) (bar * Math.min(1, profile.xp / need));
             c.fill(x + 2, y + 13, x + 2 + bar, y + 16, 0xFF1A1D2C);
             c.fill(x + 2, y + 13, x + 2 + fill, y + 16, Canvas.alpha(GOLD, 0.95f));
@@ -992,19 +1062,19 @@ public final class TreeView {
         }
         double ras = ClientPowers.rasBonus();
         if (ClientPowers.rasLoaded && ras > 0) {
-            c.text("+" + Stat.trim(ras, 1) + "% ability damage from RPG level", x + 2, y + 26, 0.6f, Canvas.alpha(PENDING, 1), false);
+            c.text("+" + Stat.trim(ras, 1) + (compact ? "% ability dmg (RPG level)" : "% ability damage from RPG level"), x + 2, y + 26, 0.6f, Canvas.alpha(PENDING, 1), false);
         }
     }
 
     private void drawLoadout(Canvas c, int mouseX, int mouseY) {
         PowerProfile profile = ClientPowers.profile;
         int slots = PowerProfile.SLOTS;
-        float size = 24;
-        float gap = 6;
-        float total = slots * size + (slots - 1) * gap;
-        float x0 = w / 2f - total / 2f;
-        float y0 = h - size - 16;
-        c.text("ABILITIES", w / 2f - c.textWidth("ABILITIES") * 0.35f, y0 - 10, 0.7f, Canvas.alpha(GOLD, 0.8f), false);
+        float size = slotSize;
+        float gap = slotGap;
+        float total = loadoutWidth();
+        float x0 = loadX;
+        float y0 = loadY;
+        c.text("ABILITIES", x0 + total / 2f - c.textWidth("ABILITIES") * 0.35f, y0 - 10, 0.7f, Canvas.alpha(GOLD, 0.8f), false);
         for (int i = 0; i < slots; i++) {
             float x = x0 + i * (size + gap);
             String ability = profile.slots[i];
@@ -1013,7 +1083,7 @@ public final class TreeView {
             c.fill(x, y0, x + size, y0 + size, hover ? 0xF0242838 : 0xE0141725);
             c.rect(x, y0, x + size, y0 + size, def == null ? 0xFF3A3F55 : Canvas.alpha(def.school.color, 1));
             if (def != null) {
-                c.item(def.icon, x + 4, y0 + 4, 16);
+                c.item(def.icon, x + (size - 16) / 2f, y0 + (size - 16) / 2f, 16);
             }
             String key = host.castKey(i);
             c.text(key, x + size - c.textWidth(key) * 0.6f - 1, y0 + size + 2, 0.6f, DIM, false);
@@ -1025,7 +1095,7 @@ public final class TreeView {
             float ps = 22;
             float width = Math.max(1, unlocked.size()) * (ps + 3) + 8;
             float px = Math.max(4, Math.min(w - width - 4, w / 2f - width / 2f));
-            float py = y0 - ps - 24;
+            float py = Math.max(44, y0 - ps - 24);
             c.raise();
             c.panel(px, py - 12, px + width, py + ps + 6, Canvas.alpha(GOLD, 0.7f));
             c.text(unlocked.isEmpty() ? "No abilities unlocked yet" : "Choose an ability for slot " + (pickerSlot + 1), px + 4, py - 9, 0.7f, TEXT, false);
@@ -1057,34 +1127,34 @@ public final class TreeView {
     }
 
     private void drawButtons(Canvas c, int mouseX, int mouseY) {
-        float bw = 58;
-        float bh = 16;
-        float x = w - 126 - 8 - bw - 6;
+        float bw = btnW;
+        float bh = btnH;
+        float step = btnH + btnGap;
+        float x = buttonsX();
         float y = h - 8 - bh;
         boolean changes = hasChanges();
-        button(c, x, y - (bh + 4) * 0, x + bw, y + bh, "Apply", PENDING, changes, this::apply, "Confirm every staged change (Enter)", mouseX, mouseY);
-        button(c, x, y - (bh + 4), x + bw, y - (bh + 4) + bh, "Undo", 0xC9C2AE, changes, this::cancel, "Discard staged changes", mouseX, mouseY);
-        button(c, x, y - (bh + 4) * 2, x + bw, y - (bh + 4) * 2 + bh, statsOpen ? "Hide Stats" : "Stats", STAT & 0xFFFFFF, true, () -> statsOpen = !statsOpen, "Totals of every allocated node (S)", mouseX, mouseY);
-        button(c, x, y - (bh + 4) * 3, x + bw, y - (bh + 4) * 3 + bh, "Share", PLAN, true, () -> shareOpen = !shareOpen, "Build codes and saved builds", mouseX, mouseY);
-        button(c, x, y - (bh + 4) * 4, x + bw, y - (bh + 4) * 4 + bh, "Center", 0xC9C2AE, true, () -> {
+        button(c, x, y, x + bw, y + bh, "Apply", PENDING, changes, this::apply, "Confirm every staged change (Enter)", mouseX, mouseY);
+        button(c, x, y - step, x + bw, y - step + bh, "Undo", 0xC9C2AE, changes, this::cancel, "Discard staged changes", mouseX, mouseY);
+        button(c, x, y - step * 2, x + bw, y - step * 2 + bh, statsOpen ? "Hide Stats" : "Stats", STAT & 0xFFFFFF, true, () -> statsOpen = !statsOpen, "Totals of every allocated node (S)", mouseX, mouseY);
+        button(c, x, y - step * 3, x + bw, y - step * 3 + bh, "Share", PLAN, true, () -> shareOpen = !shareOpen, "Build codes and saved builds", mouseX, mouseY);
+        button(c, x, y - step * 4, x + bw, y - step * 4 + bh, "Center", 0xC9C2AE, true, () -> {
             centerOnBuild();
             flyX = null;
         }, "Center on your build (H)", mouseX, mouseY);
-        button(c, x, y - (bh + 4) * 5, x + bw, y - (bh + 4) * 5 + bh, "Reset Tree", REFUND, !ClientPowers.profile.allocated.isEmpty(), this::resetTree,
+        button(c, x, y - step * 5, x + bw, y - step * 5 + bh, "Reset Tree", REFUND, !ClientPowers.profile.allocated.isEmpty(), this::resetTree,
                 "Refund every node for " + ClientPowers.config.fullResetCostLevels + " XP levels", mouseX, mouseY);
         if (!plan.isEmpty()) {
             button(c, x - bw - 6, y, x - 6, y + bh, "Use Plan", PLAN, true, this::applyPlan, "Stage as much of your plan as you can afford", mouseX, mouseY);
-            button(c, x - bw - 6, y - (bh + 4), x - 6, y - (bh + 4) + bh, "Clear Plan", 0xC9C2AE, true, () -> {
+            button(c, x - bw - 6, y - step, x - 6, y - step + bh, "Clear Plan", 0xC9C2AE, true, () -> {
                 plan.clear();
                 changed();
             }, "Remove every planned node", mouseX, mouseY);
-            c.text(plan.size() + " planned (" + tree().cost(plan) + " pts)", x - bw - 6, y - (bh + 4) * 2 + 6, 0.7f, Canvas.alpha(PLAN, 1), false);
+            c.text(plan.size() + " planned (" + tree().cost(plan) + " pts)", x - bw - 6, y - step * 2 + 6, 0.7f, Canvas.alpha(PLAN, 1), false);
         }
     }
 
     private float[] minimapRect() {
-        float size = 118;
-        return new float[]{w - size - 8, h - size - 8, w - 8, h - 8};
+        return new float[]{w - miniSize - 8, h - miniSize - 8, w - 8, h - 8};
     }
 
     private boolean minimapContains(double x, double y) {
@@ -1141,10 +1211,11 @@ public final class TreeView {
     }
 
     private void drawStats(Canvas c) {
-        float x0 = w - 200;
-        float y0 = 36;
-        float x1 = w - 4;
-        float y1 = h - 136;
+        float[] rect = statsRect();
+        float x0 = rect[0];
+        float y0 = rect[1];
+        float x1 = rect[2];
+        float y1 = rect[3];
         c.panel(x0, y0, x1, y1, Canvas.alpha(STAT, 0.6f));
         c.text("BUILD SUMMARY", x0 + 6, y0 + 5, 0.9f, Canvas.alpha(GOLD, 1), true);
         StatSheet now = ClientPowers.sheet;
@@ -1186,15 +1257,29 @@ public final class TreeView {
                 + "   Regen " + Stat.trim(after.essenceRegenPerSecond(ClientPowers.config.baseEssenceRegen), 1) + "/s", 0xFF7FD8FF, 0.75f));
         lines.add(new Line("Cooldowns x" + Stat.trim(after.cooldownMultiplier(ClientPowers.config.maxCooldownReduction), 2)
                 + "   Crit " + Stat.trim(after.critChance() * 100, 1) + "% x" + Stat.trim(after.critMultiplier(), 2), 0xFF7FD8FF, 0.75f));
-        float y = y0 + 18;
+        float content = 0;
+        for (Line line : lines) {
+            content += c.wrap(line.text(), (int) ((x1 - x0 - 14) / line.scale())).size() * (10 * line.scale() + 1);
+        }
+        float visible = y1 - 2 - (y0 + 18);
+        statsScroll = Math.max(0, Math.min(Math.max(0, content - visible), statsScroll));
+        float y = y0 + 18 - statsScroll;
         c.scissor((int) x0, (int) y0 + 16, (int) x1, (int) y1 - 2);
         for (Line line : lines) {
-            for (String part : c.wrap(line.text(), (int) ((x1 - x0 - 12) / line.scale()))) {
+            for (String part : c.wrap(line.text(), (int) ((x1 - x0 - 14) / line.scale()))) {
                 c.text(part, x0 + 6, y, line.scale(), line.color(), false);
                 y += 10 * line.scale() + 1;
             }
         }
         c.endScissor();
+        if (content > visible) {
+            // Scrollbar: the list is longer than the panel on small screens.
+            float track = visible;
+            float thumb = Math.max(10, track * visible / content);
+            float top = y0 + 18 + (track - thumb) * (statsScroll / (content - visible));
+            c.fill(x1 - 4, y0 + 18, x1 - 2, y0 + 18 + track, 0x40FFFFFF);
+            c.fill(x1 - 4, top, x1 - 2, top + thumb, Canvas.alpha(STAT, 0.9f));
+        }
     }
 
     private void drawShare(Canvas c, long millis) {

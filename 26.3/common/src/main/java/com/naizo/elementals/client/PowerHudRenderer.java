@@ -2,6 +2,7 @@ package com.naizo.elementals.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.entity.HumanoidArm;
 
 /** Draws the HUD from a loader's HUD event. Minecraft 26.2 and 26.3 edition. */
 public final class PowerHudRenderer {
@@ -14,7 +15,8 @@ public final class PowerHudRenderer {
             return;
         }
         GuiCanvas canvas = new GuiCanvas(graphics);
-        PowerHud.render(canvas, minecraft.level.getGameTime(), partialTick, PowerKeys::castKey, PowerKeys.treeKey(), minecraft.gui.hud.isHidden());
+        PowerHud.render(canvas, minecraft.level.getGameTime(), partialTick, PowerKeys::castKey, PowerKeys.treeKey(), minecraft.gui.hud.isHidden(),
+                minecraft.player.getMainArm() == HumanoidArm.LEFT && !minecraft.player.getOffhandItem().isEmpty());
         canvas.finish();
     }
 }

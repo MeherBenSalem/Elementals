@@ -20,8 +20,8 @@ requires the other.
   starts with their points.
 - RPG Player Skills attributes and Skills and Powers nodes stack: both use vanilla attribute
   modifiers. Ability damage also grows with your RPG level.
-- Default keys don't overlap: RPG Player Skills uses **K**, Skills and Powers uses **O** and
-  **R / G / Z / H**. The Skills and Powers ability bar sits right of the hotbar, clear of the RPG HUD.
+- Default keys don't overlap: RPG Player Skills uses **K**, Skills and Powers uses **I** and
+  **R / Z / B / H**. The Skills and Powers ability bar sits right of the hotbar, clear of the RPG HUD.
 
 ## Modes
 
