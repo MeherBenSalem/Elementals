@@ -5,6 +5,7 @@
  *   node --test scripts/upload_platforms.test.mjs
  *   node scripts/upload_platforms.mjs --version 2.0.0 --dry-run
  *   node scripts/upload_platforms.mjs --version 2.0.0 --require-all-targets
+ *   node scripts/upload_platforms.mjs --version 2.0.0 --curseforge-only --targets forge:1.20.1,neoforge:26.3
  *
  * The changelog defaults to patchnotes/<version>.md. Uploads already recorded in
  * .release-upload-state.json are skipped, so a failed run can be resumed.
@@ -13,7 +14,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { CURSEFORGE_ID, JAR_PREFIX, LOADER_IDS, MOD_TITLE, MODRINTH_ID,
-  assertCompleteRelease, curseforgeMetadata, modrinthMetadata, normalizeVersion, parseJar } from "./release_metadata.mjs";
+  assertCompleteRelease, curseforgeMetadata, modrinthMetadata, normalizeVersion, parseJar, parseTargets } from "./release_metadata.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -41,11 +42,12 @@ export function parseArgs(argv) {
   const out = { curseforgeOnly: false, modrinthOnly: false, dryRun: false, requireAllTargets: false, jarDir: JAR_DIR };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
-    if (["--version", "--changelog-file", "--jar-dir"].includes(a)) {
+    if (["--version", "--changelog-file", "--jar-dir", "--targets"].includes(a)) {
       const value = argv[++i];
       if (!value || value.startsWith("--")) throw new Error(`Missing value for ${a}`);
       if (a === "--version") out.version = value;
       else if (a === "--changelog-file") out.changelogFile = value;
+      else if (a === "--targets") out.targets = parseTargets(value);
       else out.jarDir = path.resolve(value);
     } else if (a === "--curseforge-only") out.curseforgeOnly = true;
     else if (a === "--modrinth-only") out.modrinthOnly = true;
@@ -54,6 +56,8 @@ export function parseArgs(argv) {
     else throw new Error(`Unknown arg ${a}`);
   }
   out.version = normalizeVersion(out.version);
+  if (out.targets && out.requireAllTargets) throw new Error("--targets and --require-all-targets cannot be combined");
+  if (out.curseforgeOnly && out.modrinthOnly) throw new Error("--curseforge-only and --modrinth-only cannot be combined");
   return out;
 }
 
@@ -164,16 +168,21 @@ async function uploadCurseForge(releases, version, changelog, state) {
 async function main() {
   const args = parseArgs(process.argv);
   const version = args.version;
-  const releases = collectReleases(args.jarDir, version);
+  let releases = collectReleases(args.jarDir, version);
   if (args.requireAllTargets) assertCompleteRelease(releases);
+  if (args.targets) {
+    // Re-run part of a release, for example the files one platform rejected.
+    releases = releases.filter((r) => args.targets.has(`${r.loader}:${r.game}`));
+    if (releases.length !== args.targets.size) throw new Error("A requested target has no jar");
+  }
   const changelog = readChangelog(version, args.changelogFile);
   console.log(`${MOD_TITLE} ${version}: ${releases.length} jars`);
   for (const r of releases) console.log(" ", r.name, "->", r.loader, r.game);
   if (args.dryRun) {
     // A preview never loads secrets, reads jar bytes or calls either API.
     for (const r of releases) {
-      console.log("[dry-run] Modrinth", JSON.stringify({ ...modrinthMetadata(r, { version, changelog: "…" }) }));
-      console.log("[dry-run] CurseForge", JSON.stringify(curseforgeMetadata(r, { version, changelog: "…", gameVersionIds: [] })));
+      if (!args.curseforgeOnly) console.log("[dry-run] Modrinth", JSON.stringify(modrinthMetadata(r, { version, changelog: "…" })));
+      if (!args.modrinthOnly) console.log("[dry-run] CurseForge", JSON.stringify(curseforgeMetadata(r, { version, changelog: "…", gameVersionIds: [] })));
     }
     return;
   }

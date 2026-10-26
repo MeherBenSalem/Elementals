@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { SUPPORTED_TARGETS, assertCompleteRelease, curseforgeRelations, modrinthMetadata, parseJar } from "./release_metadata.mjs";
+import { SUPPORTED_TARGETS, assertCompleteRelease, curseforgeMetadata, curseforgeRelations, modrinthMetadata, parseJar, parseTargets } from "./release_metadata.mjs";
 import { collectReleases, parseArgs } from "./upload_platforms.mjs";
 
 const jarName = (target, version = "2.0.0") => {
@@ -58,4 +58,21 @@ test("parses arguments", () => {
   assert.equal(args.version, "2.0.0");
   assert.ok(args.dryRun && args.requireAllTargets);
   assert.throws(() => parseArgs(["node", "x", "--version"]));
+});
+
+test("CurseForge metadata leaves out relations when a jar has no dependencies", () => {
+  for (const target of SUPPORTED_TARGETS) {
+    const release = parseJar(jarName(target));
+    const meta = curseforgeMetadata(release, { version: "2.0.0", changelog: "x", gameVersionIds: [1] });
+    if (release.loader === "fabric") assert.deepEqual(meta.relations.projects.map((p) => p.slug), ["fabric-api"]);
+    else assert.equal("relations" in meta, false);
+  }
+});
+
+test("target filters only accept supported targets", () => {
+  assert.deepEqual([...parseTargets("forge:1.20.1, neoforge:26.3")], ["forge:1.20.1", "neoforge:26.3"]);
+  assert.throws(() => parseTargets("forge:1.21.1"));
+  assert.throws(() => parseArgs(["node", "x", "--version", "2.0.0", "--targets", "forge:1.20.1", "--require-all-targets"]));
+  const args = parseArgs(["node", "x", "--version", "2.0.0", "--curseforge-only", "--targets", "forge:1.20.1"]);
+  assert.ok(args.curseforgeOnly && args.targets.has("forge:1.20.1"));
 });

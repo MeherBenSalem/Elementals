@@ -5,7 +5,9 @@
 # Variables: MODRINTH_ID, CURSEFORGE_ID (optional; defaults live in scripts/release_metadata.mjs)
 #
 # Usage:     git tag v2.0.0 && git push --tags
-#            or run the workflow manually with a version (dry_run=true previews without uploading)
+#            or run the workflow manually with a version (dry_run=true previews without uploading).
+#            To resend files one platform rejected, run it manually with `platforms` and `targets`,
+#            for example platforms=curseforge, targets=forge:1.20.1,neoforge:26.3.
 
 name: Publish
 
@@ -22,6 +24,14 @@ on:
         description: Build and preview the uploads without publishing
         required: false
         default: "false"
+      platforms:
+        description: both, modrinth or curseforge
+        required: false
+        default: "both"
+      targets:
+        description: Only these loader:minecraft targets, comma separated (empty = all eight)
+        required: false
+        default: ""
 
 jobs:
   publish:
@@ -74,8 +84,26 @@ jobs:
           ./gradlew buildAll --no-daemon
           ls -la all-jars
 
+      - name: Resolve upload options
+        id: opts
+        shell: bash
+        env:
+          PLATFORMS: ${{ inputs.platforms }}
+          TARGETS: ${{ inputs.targets }}
+        run: |
+          args=()
+          case "${PLATFORMS:-both}" in
+            both) ;;
+            modrinth) args+=(--modrinth-only) ;;
+            curseforge) args+=(--curseforge-only) ;;
+            *) echo "platforms must be both, modrinth or curseforge" >&2; exit 1 ;;
+          esac
+          TARGETS="${TARGETS// /}"
+          if [[ -n "$TARGETS" ]]; then args+=(--targets "$TARGETS"); else args+=(--require-all-targets); fi
+          echo "args=${args[*]}" >> "$GITHUB_OUTPUT"
+
       - name: Preview uploads
-        run: node scripts/upload_platforms.mjs --version "${{ steps.ver.outputs.version }}" --require-all-targets --dry-run
+        run: node scripts/upload_platforms.mjs --version "${{ steps.ver.outputs.version }}" ${{ steps.opts.outputs.args }} --dry-run
 
       - name: Upload to Modrinth + CurseForge
         if: ${{ inputs.dry_run != 'true' }}
@@ -84,4 +112,4 @@ jobs:
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           MODRINTH_ID: ${{ vars.MODRINTH_ID }}
           CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID }}
-        run: node scripts/upload_platforms.mjs --version "${{ steps.ver.outputs.version }}" --require-all-targets
+        run: node scripts/upload_platforms.mjs --version "${{ steps.ver.outputs.version }}" ${{ steps.opts.outputs.args }}

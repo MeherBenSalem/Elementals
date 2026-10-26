@@ -95,12 +95,23 @@ export function modrinthMetadata(release, { version, changelog, projectId = MODR
 }
 
 export function curseforgeMetadata(release, { version, changelog, gameVersionIds }) {
+  const relations = curseforgeRelations(release.loader, release.game);
   return {
     changelog,
     changelogType: "markdown",
     displayName: displayName(release, normalizeVersion(version)),
     gameVersions: gameVersionIds,
     releaseType: "release",
-    relations: curseforgeRelations(release.loader, release.game),
+    // The upload API rejects an empty relations.projects array, so leave relations out when there are none.
+    ...(relations.projects.length ? { relations } : {}),
   };
+}
+
+/** Parses "fabric:1.20.1,neoforge:26.3" into a set of supported targets. */
+export function parseTargets(value) {
+  const targets = String(value ?? "").split(",").map((t) => t.trim()).filter(Boolean);
+  for (const target of targets) {
+    if (!SUPPORTED_TARGETS.includes(target)) throw new Error(`Unsupported release target ${target}`);
+  }
+  return new Set(targets);
 }
