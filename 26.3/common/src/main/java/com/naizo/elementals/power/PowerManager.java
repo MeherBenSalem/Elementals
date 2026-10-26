@@ -265,7 +265,7 @@ public final class PowerManager {
             int gained = (level - profile.rasLevelCredited) * CONFIG.pointsPerRasLevel;
             profile.rasLevelCredited = level;
             if (gained > 0) {
-                notice(player, "points", Component.translatable("message.elementals.ras_points", gained, level).getString());
+                notice(player, "points", Component.translatable(countKey("message.elementals.ras_points", gained), gained, level).getString());
             }
             changed = true;
         }
@@ -305,7 +305,7 @@ public final class PowerManager {
         int gained = Progression.addXp(CONFIG, profile, amount);
         if (gained > 0) {
             Compat.playSound(player.level(), player.getX(), player.getY(), player.getZ(), "minecraft:entity.player.levelup", 0.8f, 1.2f);
-            notice(player, "level", Component.translatable("message.elementals.level_up", profile.level, gained * CONFIG.pointsPerLevel).getString());
+            notice(player, "level", Component.translatable(countKey("message.elementals.level_up", gained * CONFIG.pointsPerLevel), profile.level, gained * CONFIG.pointsPerLevel).getString());
         }
         sendProfile(player);
     }
@@ -615,6 +615,11 @@ public final class PowerManager {
     public static void essenceChanged(ServerPlayer player) {
         PowerProfile profile = profile(player);
         sendEssence(player, profile, maxEssence(player));
+    }
+
+    /** Picks the singular variant of a translation key ({@code key + ".one"}) when the count is 1. */
+    public static String countKey(String key, int count) {
+        return count == 1 ? key + ".one" : key;
     }
 
     public static void notice(ServerPlayer player, String kind, String text) {

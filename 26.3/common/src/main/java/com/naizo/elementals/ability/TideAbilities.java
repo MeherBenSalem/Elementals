@@ -124,11 +124,17 @@ final class TideAbilities {
                     for (int i = 0; i < 6; i++) {
                         double r = radius * (i + 1) / 6.0;
                         double a = spin + arm * Math.PI / 2 + r * 0.45;
-                        Fx.at(ctx.level, i % 2 == 0 ? Fx.dust(DEEP, 1.4f) : ParticleTypes.SPLASH,
-                                center.add(Math.cos(a) * r, 0.2 + (6 - i) * 0.08, Math.sin(a) * r), 1, 0, 0);
+                        Fx.at(ctx.level, i % 2 == 0 ? Fx.dust(i < 2 ? 0xBFE6FF : DEEP, 2.4f) : ParticleTypes.SPLASH,
+                                center.add(Math.cos(a) * r, 0.2 + (6 - i) * 0.12, Math.sin(a) * r), i % 2 == 0 ? 1 : 3, 0.1, 0);
                     }
                 }
-                Fx.at(ctx.level, ParticleTypes.BUBBLE_COLUMN_UP, center, 4, 0.3, 0.3, 0.3, 0.2);
+                // A spout of water rises from the eye, and spray whips around the rim.
+                Fx.at(ctx.level, ParticleTypes.BUBBLE_COLUMN_UP, center, 10, 0.35, 0.6, 0.35, 0.3);
+                Fx.at(ctx.level, ParticleTypes.FALLING_WATER, center.add(0, 2.2, 0), 10, 0.5, 1.2, 0.5, 0);
+                Fx.at(ctx.level, ParticleTypes.SPLASH, center, 16, radius * 0.7, 0.1, radius * 0.7, 0.3);
+                if (age % 4 == 0) {
+                    Fx.ring(ctx.level, Fx.dust(ICE, 1.6f), center.add(0, 0.1, 0), radius, 28, 0);
+                }
                 for (LivingEntity target : Targets.enemies(ctx.player, center, radius)) {
                     Vec3 toCenter = center.subtract(target.position()).multiply(1, 0, 1);
                     double distance = Math.max(0.5, toCenter.length());

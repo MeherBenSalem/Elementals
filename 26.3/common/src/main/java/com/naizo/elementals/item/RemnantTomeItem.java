@@ -29,7 +29,7 @@ public class RemnantTomeItem extends PowerItem {
         consume(player, stack);
         Compat.playSound(player.level(), player.getX(), player.getY(), player.getZ(), "minecraft:item.book.page_turn", 1f, 0.8f);
         Compat.playSound(player.level(), player.getX(), player.getY(), player.getZ(), "minecraft:entity.player.levelup", 0.6f, 1.4f);
-        PowerManager.notice(player, "points", Component.translatable("message.elementals.tome_used", PowerManager.CONFIG.tomePoints,
+        PowerManager.notice(player, "points", Component.translatable(PowerManager.countKey("message.elementals.tome_used", PowerManager.CONFIG.tomePoints), PowerManager.CONFIG.tomePoints,
                 PowerManager.CONFIG.tomeCap - profile.tomesUsed).getString());
         PowerManager.sendProfile(player);
         PowerManager.save(player);
@@ -38,7 +38,7 @@ public class RemnantTomeItem extends PowerItem {
 
     @Override
     protected void tooltip(List<Component> lines) {
-        lines.add(Component.translatable("item.elementals.remnant_tome.desc", PowerManager.CONFIG.tomePoints).withStyle(ChatFormatting.GOLD));
+        lines.add(Component.translatable(PowerManager.countKey("item.elementals.remnant_tome.desc", PowerManager.CONFIG.tomePoints), PowerManager.CONFIG.tomePoints).withStyle(ChatFormatting.GOLD));
         lines.add(Component.translatable("item.elementals.remnant_tome.cap", PowerManager.CONFIG.tomeCap).withStyle(ChatFormatting.DARK_GRAY));
     }
 }

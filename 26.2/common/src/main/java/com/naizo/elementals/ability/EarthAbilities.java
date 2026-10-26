@@ -15,6 +15,9 @@ import java.util.Map;
 import java.util.Set;
 
 final class EarthAbilities {
+    private static final int EARTH = 0x8A6A3F;
+    private static final int STONE = 0x9A9488;
+
     private EarthAbilities() {
     }
 
@@ -34,10 +37,13 @@ final class EarthAbilities {
                 return false;
             }
             Vec3 base = target.position();
+            Fx.spike(ctx.level, Fx.dust(STONE, 2.6f), base, 2.6, 0.75);
+            Fx.spike(ctx.level, Fx.dust(EARTH, 1.8f), base, 1.6, 0.55);
             for (int i = 0; i < 6; i++) {
                 Fx.at(ctx.level, Compat.block(Blocks.DRIPSTONE_BLOCK.defaultBlockState()), base.add(0, i * 0.35, 0), 8, 0.15, 0.1);
             }
-            Fx.at(ctx.level, ground(ctx, base), base.add(0, 0.2, 0), 30, 0.5, 0.2);
+            Fx.at(ctx.level, ground(ctx, base), base.add(0, 0.2, 0), 45, 0.6, 0.25);
+            Fx.at(ctx.level, ParticleTypes.POOF, base.add(0, 0.2, 0), 10, 0.5, 0.05);
             Fx.at(ctx.level, ParticleTypes.CRIT, base.add(0, 1.5, 0), 12, 0.2, 0.3);
             ctx.hit(target, ctx.damage());
             Compat.push(target, new Vec3(target.getDeltaMovement().x, 0.95, target.getDeltaMovement().z));
@@ -62,8 +68,15 @@ final class EarthAbilities {
             ParticleOptions dirt = ground(ctx, center);
             Fx.burstRing(ctx.level, dirt, center.add(0, 0.2, 0), 80, 0.6);
             Fx.ring(ctx.level, dirt, center.add(0, 0.1, 0), radius, 50, 0.3);
-            Fx.at(ctx.level, ParticleTypes.EXPLOSION, center, 2, 0.5, 0);
             Fx.burstRing(ctx.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, center.add(0, 0.2, 0), 20, 0.1);
+            for (int i = 0; i < 8; i++) {
+                double a = Math.PI * 2 * i / 8;
+                Vec3 spot = center.add(Math.cos(a) * radius * 0.6, 0, Math.sin(a) * radius * 0.6);
+                Fx.spike(ctx.level, Fx.dust(EARTH, 2.2f), spot, 1.3, 0.4);
+                if (i % 2 == 0) {
+                    Fx.at(ctx.level, ParticleTypes.EXPLOSION, spot.add(0, 0.4, 0), 1, 0, 0);
+                }
+            }
             for (LivingEntity target : Targets.enemies(ctx.player, center, radius)) {
                 ctx.hit(target, ctx.damage());
                 Vec3 away = target.position().subtract(center).multiply(1, 0, 1).normalize().scale(0.4);
@@ -87,7 +100,9 @@ final class EarthAbilities {
                 int step = age + 1;
                 Vec3 point = Targets.ground(ctx.player, origin.add(dir.scale(step)).add(0, 2, 0));
                 ParticleOptions dirt = ground(ctx, point);
-                Fx.at(ctx.level, dirt, point.add(0, 0.6, 0), 25, 0.3, 0.6, 0.3, 0.15);
+                Fx.at(ctx.level, dirt, point.add(0, 0.6, 0), 40, 0.3, 0.6, 0.3, 0.2);
+                Fx.spike(ctx.level, Fx.dust(step % 2 == 0 ? STONE : EARTH, 2.2f), point, 1.2 + (step % 3) * 0.35, 0.45);
+                Fx.at(ctx.level, ParticleTypes.POOF, point.add(0, 0.2, 0), 4, 0.3, 0.03);
                 Fx.at(ctx.level, ParticleTypes.CAMPFIRE_COSY_SMOKE, point.add(0, 0.2, 0), 1, 0.2, 0.05);
                 Fx.at(ctx.level, ParticleTypes.LAVA, point.add(0, 0.3, 0), 1, 0.2, 0);
                 for (LivingEntity target : Targets.enemies(ctx.player, point.add(0, 0.8, 0), 1.6)) {
@@ -115,8 +130,17 @@ final class EarthAbilities {
             for (int ring = 1; ring <= 3; ring++) {
                 Fx.ring(ctx.level, dirt, center.add(0, 0.2, 0), radius * ring / 3.0, 30 * ring, 0.4);
             }
-            Fx.at(ctx.level, ParticleTypes.EXPLOSION, center, 6, radius * 0.4, 0);
+            // Blasts sit on the outer ring so they never fill the caster's own view.
+            for (int i = 0; i < 6; i++) {
+                double a = Math.PI * 2 * i / 6 + 0.5;
+                Fx.at(ctx.level, ParticleTypes.EXPLOSION, center.add(Math.cos(a) * radius * 0.8, 0.4, Math.sin(a) * radius * 0.8), 1, 0, 0);
+            }
             Fx.spiral(ctx.level, Fx.dust(0xC9A05A, 2f), center, 1.2, 3, 60, 3);
+            for (int i = 0; i < 10; i++) {
+                double a = Math.PI * 2 * i / 10;
+                double d = radius * (0.45 + 0.25 * (i % 2));
+                Fx.spike(ctx.level, Fx.dust(i % 2 == 0 ? STONE : EARTH, 2.6f), center.add(Math.cos(a) * d, 0, Math.sin(a) * d), 2.0 + (i % 3) * 0.6, 0.6);
+            }
             for (LivingEntity target : Targets.enemies(ctx.player, center, radius)) {
                 ctx.hit(target, ctx.damage());
                 Vec3 away = target.position().subtract(center).multiply(1, 0, 1).normalize().scale(1.2);

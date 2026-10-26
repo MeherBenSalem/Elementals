@@ -625,6 +625,12 @@ public final class TreeView {
             return true;
         }
         if (key == KEY_ESCAPE) {
+            // Overlays close first, so Esc never throws away the screen behind them.
+            if (pickerSlot >= 0 || shareOpen) {
+                pickerSlot = -1;
+                shareOpen = false;
+                return true;
+            }
             if (hasChanges() && !discardArmed) {
                 discardArmed = true;
                 say("You have staged changes. Press Esc again to discard them, or Enter to apply.", REFUND);

@@ -91,6 +91,21 @@ public final class Fx {
         }
     }
 
+    /** A cone of particles rising from base: a stone spike, a crystal or a flame jet. */
+    public static void spike(ServerLevel level, ParticleOptions particle, Vec3 base, double height, double radius) {
+        int layers = Math.max(3, (int) (height / 0.22));
+        for (int layer = 0; layer < layers; layer++) {
+            double t = layer / (double) layers;
+            double r = radius * (1 - t);
+            int points = Math.max(1, (int) Math.round(7 * (1 - t)) + 1);
+            double twist = layer * 0.7;
+            for (int i = 0; i < points; i++) {
+                double a = twist + Math.PI * 2 * i / points;
+                level.sendParticles(particle, base.x + Math.cos(a) * r, base.y + t * height, base.z + Math.sin(a) * r, 1, 0, 0, 0, 0);
+            }
+        }
+    }
+
     public static void sound(ServerLevel level, Vec3 pos, String sound, float volume, float pitch) {
         Compat.playSound(level, pos.x, pos.y, pos.z, sound, volume, pitch);
     }

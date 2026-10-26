@@ -58,17 +58,31 @@ final class UmbralAbilities {
             Zones.add(age -> {
                 if (ctx.player.isRemoved() || age > ticks) {
                     if (age > ticks) {
-                        Fx.at(ctx.level, ParticleTypes.REVERSE_PORTAL, center, 60, 0.4, 0.4);
+                        // Collapse: the rift implodes into a burst of light.
+                        Fx.at(ctx.level, ParticleTypes.REVERSE_PORTAL, center, 120, 0.6, 0.6);
+                        Fx.sphere(ctx.level, Fx.dust(PURPLE, 2.4f), center, 1.6, 48);
+                        Fx.at(ctx.level, Compat.flash(), center, 1, 0, 0);
+                        Fx.sound(ctx.level, center, "minecraft:entity.enderman.teleport", 0.8f, 0.6f);
                     }
                     return false;
                 }
-                double spin = age * 0.35;
-                for (int i = 0; i < 3; i++) {
-                    double a = spin + i * Math.PI * 2 / 3;
-                    Fx.at(ctx.level, Fx.dust(PURPLE, 1.4f), center.add(Math.cos(a) * 0.9, Math.sin(age * 0.2) * 0.3, Math.sin(a) * 0.9), 1, 0, 0);
+                // Accretion disk: two spiral arms of violet dust wound around a dark core.
+                double spin = age * 0.32;
+                for (int arm = 0; arm < 2; arm++) {
+                    for (int i = 0; i < 7; i++) {
+                        double r = 0.35 + i * 0.3;
+                        double a = spin + arm * Math.PI + r * 1.1;
+                        Fx.at(ctx.level, Fx.dust(i < 2 ? 0x2A0F45 : PURPLE, 2.6f - i * 0.2f),
+                                center.add(Math.cos(a) * r, Math.sin(age * 0.15 + r) * 0.12, Math.sin(a) * r), 1, 0, 0);
+                    }
                 }
-                Fx.at(ctx.level, ParticleTypes.PORTAL, center, 6, radius * 0.4, 0.6);
-                Fx.at(ctx.level, ParticleTypes.SQUID_INK, center, 1, 0.2, 0.01);
+                Fx.at(ctx.level, ParticleTypes.SQUID_INK, center, 3, 0.2, 0.01);
+                Fx.at(ctx.level, ParticleTypes.REVERSE_PORTAL, center, 6, 0.15, 0.05);
+                // Portal particles drift back to their spawn point, so these stream into the rift.
+                Fx.at(ctx.level, ParticleTypes.PORTAL, center, 24, radius * 0.45, 1.2);
+                if (age % 3 == 0) {
+                    Fx.at(ctx.level, ParticleTypes.WITCH, center.add(0, 1.2, 0), 6, 0.15, 1.0, 0.15, 0.02);
+                }
                 for (LivingEntity target : Targets.enemies(ctx.player, center, radius)) {
                     Vec3 pull = center.subtract(target.position()).normalize().scale(0.12);
                     Compat.push(target, target.getDeltaMovement().scale(0.8).add(pull.x, pull.y * 0.5 + 0.02, pull.z));

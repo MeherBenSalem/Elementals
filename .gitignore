@@ -11,4 +11,10 @@ out
 .idea
 .vscode
 .release-upload-state.json
-tools/
+# Local tooling stays untracked; the shared build helpers below are part of the repo.
+tools/*
+!tools/sync-shared.sh
+!tools/gen_docs.py
+!tools/gen_textures.py
+marketing/source/.render-*.html
+secrets/

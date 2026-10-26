@@ -19,11 +19,12 @@ final class StormAbilities {
     }
 
     static void bolt(AbilityContext ctx, Vec3 from, Vec3 to) {
-        ParticleOptions dust = Fx.dust(CYAN, 1.4f);
+        ParticleOptions dust = Fx.dust(CYAN, 2.2f);
         Fx.arc(ctx.level, dust, from, to, 0.8);
-        Fx.arc(ctx.level, Fx.dust(0xFFFFFF, 0.7f), from, to, 0.4);
+        Fx.arc(ctx.level, Fx.dust(0xFFFFFF, 1.1f), from, to, 0.4);
         Fx.arc(ctx.level, ParticleTypes.ELECTRIC_SPARK, from, to, 0.5);
-        Fx.at(ctx.level, ParticleTypes.ELECTRIC_SPARK, to, 18, 0.3, 0.35);
+        Fx.at(ctx.level, ParticleTypes.ELECTRIC_SPARK, to, 28, 0.35, 0.45);
+        Fx.at(ctx.level, Compat.flash(), to, 1, 0, 0);
     }
 
     static void register(Map<String, Ability> registry) {
