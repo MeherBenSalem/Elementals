@@ -1,5 +1,5 @@
 {
- "duration": 30.351,
+ "duration": 37.5,
  "lines": [
   {
    "i": 0,
@@ -22,79 +22,79 @@
   {
    "i": 3,
    "start": 5.432,
-   "end": 6.642,
+   "end": 6.643,
    "cap": "6 schools of magic."
   },
   {
    "i": 4,
    "start": 6.722,
-   "end": 8.233,
+   "end": 8.232,
    "cap": "Start anywhere. Go anywhere."
   },
   {
    "i": 5,
-   "start": 8.533,
-   "end": 9.443,
+   "start": 8.54,
+   "end": 9.45,
    "cap": "30 ABILITIES."
   },
   {
    "i": 6,
-   "start": 9.563,
-   "end": 10.567,
+   "start": 14.16,
+   "end": 15.164,
    "cap": "Lightning storms."
   },
   {
    "i": 7,
-   "start": 10.667,
-   "end": 11.41,
+   "start": 15.56,
+   "end": 16.304,
    "cap": "Whirlpools."
   },
   {
    "i": 8,
-   "start": 11.51,
-   "end": 12.15,
+   "start": 17.27,
+   "end": 17.91,
    "cap": "METEORS!"
   },
   {
    "i": 9,
-   "start": 12.6,
-   "end": 14.478,
+   "start": 18.85,
+   "end": 20.728,
    "cap": "12 keystones that break the rules."
   },
   {
    "i": 10,
-   "start": 14.778,
-   "end": 17.181,
+   "start": 21.17,
+   "end": 23.573,
    "cap": "Plan your whole build before you spend a single point,"
   },
   {
    "i": 11,
-   "start": 17.231,
-   "end": 18.485,
+   "start": 23.62,
+   "end": 24.874,
    "cap": "and share it with ONE code."
   },
   {
    "i": 12,
-   "start": 18.835,
-   "end": 22.278,
+   "start": 24.95,
+   "end": 28.394,
    "cap": "Got RPG Player Skills? Your levels turn into skill points."
   },
   {
    "i": 13,
-   "start": 22.578,
-   "end": 24.409,
+   "start": 28.7,
+   "end": 30.53,
    "cap": "Fabric, Forge and NeoForge."
   },
   {
    "i": 14,
-   "start": 24.659,
-   "end": 26.777,
+   "start": 31.97,
+   "end": 34.088,
    "cap": "It's called Remnants: Skills and Powers."
   },
   {
    "i": 15,
-   "start": 27.077,
-   "end": 29.451,
+   "start": 34.36,
+   "end": 36.734,
    "cap": "Send this to the friend who always plays mage."
   }
  ]

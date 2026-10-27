@@ -1,19 +1,26 @@
-import json, sys
-import numpy as np, soundfile as sf
-voice = sys.argv[1]
-gaps = [0.22, 0.3, 0.35, 0.08, 0.3, 0.12, 0.1, 0.1, 0.45, 0.3, 0.05, 0.35, 0.3, 0.25, 0.3, 0.0]
-lead, tail = 0.15, 0.9
-lines = json.load(open("/tmp/claude-0/reel/lines.json"))
-parts, t, timeline, sr = [], lead, [], 24000
-parts.append(np.zeros(int(lead * sr), dtype=np.float32))
-for i, line in enumerate(lines):
-    a, sr = sf.read(f"/tmp/claude-0/reel/vo/{voice}_{i:02d}.wav", dtype="float32")
-    timeline.append({"i": i, "start": round(t, 3), "end": round(t + len(a) / sr, 3), "cap": line["cap"]})
-    parts.append(a); t += len(a) / sr
-    parts.append(np.zeros(int(gaps[i] * sr), dtype=np.float32)); t += gaps[i]
-parts.append(np.zeros(int(tail * sr), dtype=np.float32)); t += tail
-audio = np.concatenate(parts)
-audio = audio / max(1e-6, np.abs(audio).max()) * 0.89
-sf.write("/tmp/claude-0/reel/vo.wav", audio, sr)
-json.dump({"duration": round(t, 3), "lines": timeline}, open("/tmp/claude-0/reel/timeline.json", "w"), indent=1)
-print("duration", round(t, 2))
+"""Places each voice line at its planned start (timeline_plan.json) and writes vo.wav + timeline.json."""
+import json
+import numpy as np
+import soundfile as sf
+
+E = "/tmp/claude-0/reel2/edit"
+P = json.load(open(f"{E}/timeline_plan.json"))
+sr = 24000
+out = np.zeros(int(round(P["duration"] * sr)) + sr, dtype=np.float32)
+timeline, prev_end = [], 0.0
+for line in P["lines"]:
+    a, r = sf.read(f"{E}/vo/af_heart_{line['i']:02d}.wav", dtype="float32")
+    assert r == sr
+    st = line["start"]
+    assert st >= prev_end + 0.03, f"line {line['i']} starts {st} before previous ends {prev_end}"
+    i = int(round(st * sr))
+    out[i:i + len(a)] += a
+    prev_end = st + len(a) / sr
+    timeline.append({"i": line["i"], "start": st, "end": round(prev_end, 3), "cap": line["cap"]})
+assert prev_end < P["duration"] - 0.3
+out = out[:int(round(P["duration"] * sr))]
+out = out / max(1e-6, np.abs(out).max()) * 0.89
+sf.write(f"{E}/vo.wav", out, sr)
+json.dump({"duration": P["duration"], "lines": timeline}, open(f"{E}/timeline.json", "w"), indent=1)
+for l in timeline:
+    print(f'{l["start"]:6.2f}-{l["end"]:6.2f} {l["cap"]}')

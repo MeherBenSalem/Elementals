@@ -1,0 +1,211 @@
+{
+ "duration": 37.5,
+ "bpm": 128.0,
+ "drop": 3.326,
+ "beat": 0.46875,
+ "flashes": [
+  [
+   0.4,
+   0.55
+  ],
+  [
+   3.326,
+   0.35
+  ],
+  [
+   17.3885,
+   0.55
+  ],
+  [
+   31.9198,
+   0.7
+  ]
+ ],
+ "brand": [
+  [
+   3.4,
+   24.8385
+  ],
+  [
+   28.6885,
+   31.8498
+  ]
+ ],
+ "s522": [
+  3.326,
+  5.38,
+  0.95
+ ],
+ "s30": [
+  8.4823,
+  9.379800000000001,
+  0.45
+ ],
+ "labels": [
+  {
+   "t0": 8.4823,
+   "t1": 9.4198,
+   "name": "Inferno Wave",
+   "school": "Pyromancy",
+   "color": "#ff6a2a",
+   "sfx": "fire"
+  },
+  {
+   "t0": 9.4198,
+   "t1": 10.3573,
+   "name": "Glacial Prison",
+   "school": "Tidecalling",
+   "color": "#4f8dff",
+   "sfx": "ice"
+  },
+  {
+   "t0": 10.3573,
+   "t1": 11.2948,
+   "name": "Radiant Nova",
+   "school": "Verdance",
+   "color": "#6ee07a",
+   "sfx": "radiant"
+  },
+  {
+   "t0": 11.2948,
+   "t1": 12.2323,
+   "name": "Eclipse",
+   "school": "Umbral Arts",
+   "color": "#b26bff",
+   "sfx": "void"
+  },
+  {
+   "t0": 12.2323,
+   "t1": 13.1698,
+   "name": "Thunderclap",
+   "school": "Stormcalling",
+   "color": "#6fe7ff",
+   "sfx": "thunder"
+  },
+  {
+   "t0": 13.1698,
+   "t1": 14.1073,
+   "name": "Tremor",
+   "school": "Earthshaping",
+   "color": "#c9a05a",
+   "sfx": "earth"
+  },
+  {
+   "t0": 14.1073,
+   "t1": 15.5135,
+   "name": "Tempest",
+   "school": "Stormcalling",
+   "color": "#6fe7ff",
+   "sfx": "storm"
+  },
+  {
+   "t0": 15.5135,
+   "t1": 16.9198,
+   "name": "Maelstrom",
+   "school": "Tidecalling",
+   "color": "#4f8dff",
+   "sfx": "swirl"
+  },
+  {
+   "t0": 16.9198,
+   "t1": 18.7948,
+   "name": "Meteor",
+   "school": "Pyromancy",
+   "color": "#ff6a2a",
+   "sfx": "none"
+  }
+ ],
+ "capTop": [
+  {
+   "t0": 5.4,
+   "t1": 8.4823,
+   "top": 300
+  },
+  {
+   "t0": 21.1385,
+   "t1": 23.4823,
+   "top": 560
+  }
+ ],
+ "capBig": [
+  0.0,
+  2.2
+ ],
+ "loaders": {
+  "after": 28.5,
+  "bg": [
+   28.6385,
+   31.9198
+  ],
+  "end": 31.9198
+ },
+ "title": [
+  31.9198,
+  34.2635
+ ],
+ "stickers": {
+  "copied": [
+   24.38,
+   24.8585
+  ],
+  "rpgpill": [
+   "levels",
+   24.9,
+   28.6085
+  ]
+ },
+ "plane": [
+  34.3135,
+  37.2
+ ],
+ "events": {
+  "impact_hook": 0.4,
+  "impact_big": 17.3885,
+  "tree_open": 2.336,
+  "zoom": [
+   3.326,
+   4.726
+  ],
+  "origins": [
+   5.6698,
+   6.1385,
+   6.6073,
+   7.076,
+   7.5448,
+   8.0135
+  ],
+  "montage": 8.4823,
+  "keystone_tip": 19.12,
+  "plan": [
+   21.7,
+   22.25,
+   22.95
+  ],
+  "share_open": 23.68,
+  "share_copy": 24.38,
+  "rpg_banner": 25.1885,
+  "title": 31.9198,
+  "cta": 34.2635,
+  "tempest_strikes": [
+   14.1073,
+   14.6353
+  ],
+  "combo_chain": 28.6482,
+  "combo_meteor": 29.88,
+  "combo_inferno": 30.6455,
+  "whooshes": [
+   [
+    5.252000000000001,
+    true
+   ],
+   [
+    18.6148,
+    true
+   ],
+   [
+    34.1635,
+    false
+   ]
+  ]
+ }
+}

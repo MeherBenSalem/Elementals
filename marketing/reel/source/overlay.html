@@ -3,7 +3,7 @@
 <style>
 @font-face { font-family: Mont; src: url('fonts/Montserrat.ttf'); font-weight: 100 900; }
 @font-face { font-family: Anton; src: url('fonts/Anton-Regular.ttf'); }
-@font-face { font-family: Cinzel; src: url('../../../home/user/Elementals/marketing/source/fonts/cinzel.ttf'); }
+@font-face { font-family: Cinzel; src: url('fonts/cinzel.ttf'); }
 html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; overflow: hidden; }
 * { box-sizing: border-box; }
 .layer { position: absolute; inset: 0; }
@@ -17,7 +17,7 @@ html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; 
        transform-origin: 50% 50%; }
 #cap span { display: inline-block; color: #fff; font-size: 86px; letter-spacing: .5px;
             -webkit-text-stroke: 12px #000; paint-order: stroke fill;
-            text-shadow: 0 8px 0 rgba(0,0,0,.55), 0 0 28px rgba(0,0,0,.45); transition: none; }
+            text-shadow: 0 8px 0 rgba(0,0,0,.55), 0 0 28px rgba(0,0,0,.45); }
 #cap span.on { color: #ffd84a; }
 #cap.big span { font-size: 100px; }
 
@@ -29,6 +29,14 @@ html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; 
              filter: drop-shadow(0 10px 0 rgba(0,0,0,.55)) drop-shadow(0 0 40px rgba(255,190,60,.45)); }
 .stat .lbl { font-family: Mont; font-weight: 900; font-size: 92px; color: #fff; letter-spacing: 6px; margin-top: -6px;
              -webkit-text-stroke: 12px #000; paint-order: stroke fill; text-shadow: 0 8px 0 rgba(0,0,0,.55); }
+
+/* montage: spell name + school, in the school's colour */
+#label { position: absolute; left: 0; right: 0; top: 236px; text-align: center; opacity: 0; }
+#lname { font-family: Anton; font-size: 128px; line-height: 1; letter-spacing: 3px; color: #fff; text-transform: uppercase;
+         -webkit-text-stroke: 12px #000; paint-order: stroke fill; display: inline-block; }
+#lbar { width: 300px; height: 7px; margin: 12px auto 10px; border-radius: 4px; transform-origin: 50% 50%; }
+#lschool { font-family: Mont; font-weight: 900; font-size: 50px; letter-spacing: 12px; text-transform: uppercase;
+           -webkit-text-stroke: 8px #000; paint-order: stroke fill; display: inline-block; }
 
 /* loader pills */
 #loaders { position: absolute; left: 0; right: 0; top: 1080px; display: flex; flex-direction: column; align-items: center; gap: 26px; }
@@ -68,7 +76,7 @@ html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; 
 
 /* brand tag */
 #brand { position: absolute; left: 0; right: 0; top: 196px; text-align: center; font-family: Cinzel; font-weight: 700;
-         font-size: 40px; letter-spacing: 6px; color: #f6dc94; opacity: 0; 
+         font-size: 40px; letter-spacing: 6px; color: #f6dc94; opacity: 0;
          text-shadow: 0 3px 0 rgba(0,0,0,.8), 0 0 18px rgba(0,0,0,.7); }
 
 /* CTA */
@@ -82,6 +90,8 @@ html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; 
 <div id="s522" class="stat"><div class="num">0</div><div class="lbl">NODES</div></div>
 <div id="s30" class="stat"><div class="num">0</div><div class="lbl">ABILITIES</div></div>
 
+<div id="label"><div id="lname"></div><div id="lbar"></div><div id="lschool"></div></div>
+
 <div id="loaderBg"></div>
 <div id="loaders">
   <div class="pill" id="pFabric" style="--c:#dbd0b4;--g:rgba(219,208,180,.35)">FABRIC</div>
@@ -91,7 +101,7 @@ html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; 
 </div>
 
 <div id="title" class="layer">
-  <img id="logo" src="../../../home/user/Elementals/marketing/source/logo.png">
+  <img id="logo" src="logo.png">
   <div id="t1">REMNANTS</div>
   <div id="rule"></div>
   <div id="t2">SKILLS AND POWERS</div>
@@ -112,6 +122,7 @@ html, body { margin: 0; width: 1080px; height: 1920px; background: transparent; 
 <script>
 const CAPS = __CAPTIONS__;
 const WORDS = __WORDS__;
+const C = __CUES__;
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 const eo = x => 1 - Math.pow(1 - clamp(x), 3);
 const eio = x => { x = clamp(x); return x * x * (3 - 2 * x); };
@@ -128,7 +139,10 @@ function captions(t) {
   const c = CAPS[i];
   if (i !== lastChunk) {
     cap.innerHTML = c.words.map(w => `<span>${w.text}</span>`).join('');
-    cap.className = c.start < 2.2 ? 'big' : '';
+    cap.className = c.start >= C.capBig[0] && c.start < C.capBig[1] ? 'big' : '';
+    // position follows the chunk, so a caption never jumps mid-phrase
+    const pos = C.capTop.find(p => c.start >= p.t0 && c.start < p.t1);
+    cap.style.top = (pos ? pos.top : 1150) + 'px';
     lastChunk = i;
   }
   const spans = cap.querySelectorAll('span');
@@ -161,33 +175,58 @@ function sticker(id, t, a, b) {
   el.style.transform = `translateX(-50%) scale(${s}) rotate(${-4 + 4 * eo((t - a) / .3)}deg)`;
 }
 
+let lastLabel = null;
+function label(t) {
+  const L = C.labels.find(l => t >= l.t0 && t < l.t1);
+  const el = $('label');
+  if (!L) { el.style.opacity = 0; return 0; }
+  if (L !== lastLabel) {
+    $('lname').textContent = L.name;
+    $('lschool').textContent = L.school;
+    $('lschool').style.color = L.color;
+    $('lname').style.textShadow = `0 8px 0 rgba(0,0,0,.55), 0 0 36px ${L.color}`;
+    $('lbar').style.background = L.color;
+    $('lbar').style.boxShadow = `0 0 24px ${L.color}`;
+    lastLabel = L;
+  }
+  const u = t - L.t0;
+  const o = clamp(u / 0.08) * clamp((L.t1 - t) / 0.07);
+  el.style.opacity = o;
+  $('lname').style.transform = `translateX(${(1 - eo(u / 0.22)) * -70}px) scale(${0.86 + 0.14 * back(u / 0.24)})`;
+  $('lbar').style.transform = `scaleX(${eo((u - 0.05) / 0.25)})`;
+  $('lschool').style.opacity = clamp((u - 0.07) / 0.12);
+  $('lschool').style.transform = `translateY(${(1 - eo((u - 0.07) / 0.25)) * 18}px)`;
+  return o;
+}
+
 function frame(t) {
-  // flashes on impacts
   let fl = 0;
-  for (const [at, peak] of [[0.85, .85], [11.67, .9], [24.62, .7]]) {
+  for (const [at, peak] of C.flashes) {
     if (t >= at && t < at + 0.3) fl = Math.max(fl, peak * Math.pow(1 - (t - at) / 0.3, 2));
   }
   $('flash').style.opacity = fl;
 
-  $('brand').style.opacity = 0.75 * win(t, 3.4, 24.55, 0.3, 0.2);
+  const lo = label(t);
+  $('brand').style.opacity = 0.75 * Math.max(...C.brand.map(([a, b]) => win(t, a, b, 0.3, 0.2))) * (1 - lo);
 
-  stat('s522', t, 3.33, 5.40, 522, 0.95);
-  stat('s30', t, 8.50, 9.50, 30, 0.45);
+  stat('s522', t, C.s522[0], C.s522[1], 522, C.s522[2]);
+  stat('s30', t, C.s30[0], C.s30[1], 30, C.s30[2]);
 
   // loader pills, each on its spoken word
-  const tFab = wordAt('fabric', 22.3), tForge = wordAt('forge', tFab + 0.1), tNeo = wordAt('neo', tForge + 0.1);
-  $('loaderBg').style.opacity = win(t, 22.45, 24.62, 0.2, 0.12);
+  const LD = C.loaders;
+  const tFab = wordAt('fabric', LD.after), tForge = wordAt('forge', tFab + 0.1), tNeo = wordAt('neo', tForge + 0.1);
+  $('loaderBg').style.opacity = win(t, LD.bg[0], LD.bg[1], 0.2, 0.12);
   [['pFabric', tFab, -1], ['pForge', tForge, 1], ['pNeo', tNeo, -1]].forEach(([id, at, dir]) => {
     const el = $(id), p = eo((t - at + 0.04) / 0.22);
-    el.style.opacity = clamp((t - at + 0.04) / 0.08) * clamp((24.62 - t) / 0.12);
+    el.style.opacity = clamp((t - at + 0.04) / 0.08) * clamp((LD.end - t) / 0.12);
     el.style.transform = `translateX(${dir * (1 - p) * 520}px) scale(${0.9 + 0.1 * back((t - at) / .25)})`;
   });
   const v = $('versions');
-  v.style.opacity = clamp((t - (tNeo + 0.3)) / 0.2) * clamp((24.62 - t) / 0.12);
+  v.style.opacity = clamp((t - (tNeo + 0.3)) / 0.2) * clamp((LD.end - t) / 0.12);
   v.style.transform = `translateY(${(1 - eo((t - tNeo - .3) / .3)) * 30}px)`;
 
   // title card
-  const T0 = 24.62, T1 = 27.0;
+  const [T0, T1] = C.title;
   const to = win(t, T0, T1, 0.12, 0.18);
   $('title').style.opacity = to;
   $('dim').style.opacity = 0.92 * win(t, T0, T1, 0.2, 0.2);
@@ -205,14 +244,15 @@ function frame(t) {
     $('shine').style.left = `${-300 + 1700 * eio((t - T0 - 0.6) / 0.9)}px`;
   }
 
-  sticker('copied', t, 18.05, 18.70);
-  sticker('rpgpill', t, 19.25, 20.90);
+  sticker('copied', t, C.stickers.copied[0], C.stickers.copied[1]);
+  const rp = C.stickers.rpgpill;
+  sticker('rpgpill', t, wordAt(rp[0], rp[1]), rp[2]);
 
   // CTA: a paper plane flies in and bobs above the captions; everything clears before the loop seam
-  const pl = $('plane'), pa = 27.05;
+  const pl = $('plane'), pa = C.plane[0];
   const pp = eo((t - pa) / 0.55);
   const px = -260 + (435 + 260) * pp, py = 1500 - (1500 - 880) * pp + Math.sin((t - pa) * 5) * 10 * clamp((t - pa - .55) / .3);
-  pl.style.opacity = win(t, pa, 30.2, 0.1, 0.25);
+  pl.style.opacity = win(t, pa, C.plane[1], 0.1, 0.25);
   pl.style.transform = `translate(${px}px, ${py}px) rotate(${-30 + 30 * pp}deg) scale(${1 + 0.06 * Math.sin((t - pa) * 6)})`;
 
   captions(t);

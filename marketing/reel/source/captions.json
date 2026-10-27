@@ -1,37 +1,37 @@
 [
  {
   "start": 0.0,
-  "end": 1.14,
+  "end": 1.12,
   "words": [
    {
     "text": "MINECRAFT",
     "start": 0.0,
-    "end": 0.58
+    "end": 0.56
    },
    {
     "text": "DOESN'T",
-    "start": 0.58,
-    "end": 0.96
+    "start": 0.56,
+    "end": 0.98
    },
    {
     "text": "HAVE",
-    "start": 0.96,
-    "end": 1.14
+    "start": 0.98,
+    "end": 1.12
    }
   ]
  },
  {
-  "start": 1.14,
-  "end": 2.06,
+  "start": 1.12,
+  "end": 2.093,
   "words": [
    {
     "text": "A",
-    "start": 1.14,
-    "end": 1.3
+    "start": 1.12,
+    "end": 1.28
    },
    {
     "text": "SKILL",
-    "start": 1.3,
+    "start": 1.28,
     "end": 1.46
    },
    {
@@ -42,12 +42,12 @@
   ]
  },
  {
-  "start": 2.06,
-  "end": 3.39,
+  "start": 2.26,
+  "end": 3.296,
   "words": [
    {
     "text": "SO",
-    "start": 2.06,
+    "start": 2.26,
     "end": 2.28
    },
    {
@@ -63,13 +63,13 @@
    {
     "text": "ONE.",
     "start": 2.64,
-    "end": 2.94
+    "end": 3.02
    }
   ]
  },
  {
   "start": 5.432,
-  "end": 6.8,
+  "end": 6.692,
   "words": [
    {
     "text": "6",
@@ -84,22 +84,22 @@
    {
     "text": "OF",
     "start": 6.037,
-    "end": 6.188
+    "end": 6.189
    },
    {
     "text": "MAGIC.",
-    "start": 6.188,
-    "end": 6.642
+    "start": 6.189,
+    "end": 6.643
    }
   ]
  },
  {
-  "start": 6.8,
+  "start": 6.88,
   "end": 7.62,
   "words": [
    {
     "text": "START",
-    "start": 6.8,
+    "start": 6.88,
     "end": 6.98
    },
    {
@@ -111,7 +111,7 @@
  },
  {
   "start": 7.62,
-  "end": 8.53,
+  "end": 8.482,
   "words": [
    {
     "text": "GO",
@@ -121,328 +121,328 @@
    {
     "text": "ANYWHERE.",
     "start": 7.72,
-    "end": 8.08
+    "end": 8.1
    }
   ]
  },
  {
-  "start": 9.66,
-  "end": 10.71,
+  "start": 14.18,
+  "end": 15.35,
   "words": [
    {
     "text": "LIGHTNING",
-    "start": 9.66,
-    "end": 9.82
+    "start": 14.18,
+    "end": 14.46
    },
    {
     "text": "STORMS.",
-    "start": 9.82,
-    "end": 10.26
+    "start": 14.46,
+    "end": 14.9
    }
   ]
  },
  {
-  "start": 10.84,
-  "end": 11.64,
+  "start": 15.56,
+  "end": 16.754,
   "words": [
    {
     "text": "WHIRLPOOLS.",
-    "start": 10.84,
-    "end": 11.38
+    "start": 15.56,
+    "end": 16.304
    }
   ]
  },
  {
-  "start": 11.64,
-  "end": 12.37,
+  "start": 17.42,
+  "end": 18.15,
   "words": [
    {
     "text": "METEORS!",
-    "start": 11.64,
-    "end": 11.92
+    "start": 17.42,
+    "end": 17.7
    }
   ]
  },
  {
-  "start": 12.56,
-  "end": 13.34,
+  "start": 18.92,
+  "end": 19.62,
   "words": [
    {
     "text": "12",
-    "start": 12.56,
-    "end": 12.86
+    "start": 18.92,
+    "end": 19.08
    },
    {
     "text": "KEYSTONES",
-    "start": 12.86,
-    "end": 13.34
+    "start": 19.08,
+    "end": 19.62
    }
   ]
  },
  {
-  "start": 13.34,
-  "end": 14.73,
+  "start": 19.62,
+  "end": 20.97,
   "words": [
    {
     "text": "THAT",
-    "start": 13.34,
-    "end": 13.64
+    "start": 19.62,
+    "end": 19.9
    },
    {
     "text": "BREAK",
-    "start": 13.64,
-    "end": 13.82
+    "start": 19.9,
+    "end": 20.08
    },
    {
     "text": "THE",
-    "start": 13.82,
-    "end": 14.0
+    "start": 20.08,
+    "end": 20.24
    },
    {
     "text": "RULES.",
-    "start": 14.0,
-    "end": 14.28
+    "start": 20.24,
+    "end": 20.52
    }
   ]
  },
  {
-  "start": 14.778,
-  "end": 15.472,
+  "start": 21.17,
+  "end": 21.864,
   "words": [
    {
     "text": "PLAN",
-    "start": 14.778,
-    "end": 14.992
+    "start": 21.17,
+    "end": 21.384
    },
    {
     "text": "YOUR",
-    "start": 14.992,
-    "end": 15.205
+    "start": 21.384,
+    "end": 21.597
    },
    {
     "text": "WHOLE",
-    "start": 15.205,
-    "end": 15.472
+    "start": 21.597,
+    "end": 21.864
    }
   ]
  },
  {
-  "start": 15.472,
-  "end": 16.22,
+  "start": 21.864,
+  "end": 22.612,
   "words": [
    {
     "text": "BUILD",
-    "start": 15.472,
-    "end": 15.739
+    "start": 21.864,
+    "end": 22.131
    },
    {
     "text": "BEFORE",
-    "start": 15.739,
-    "end": 16.06
+    "start": 22.131,
+    "end": 22.452
    },
    {
     "text": "YOU",
-    "start": 16.06,
-    "end": 16.22
+    "start": 22.452,
+    "end": 22.612
    }
   ]
  },
  {
-  "start": 16.22,
-  "end": 17.2,
+  "start": 22.612,
+  "end": 23.59,
   "words": [
    {
     "text": "SPEND",
-    "start": 16.22,
-    "end": 16.487
+    "start": 22.612,
+    "end": 22.879
    },
    {
     "text": "A",
-    "start": 16.487,
-    "end": 16.54
+    "start": 22.879,
+    "end": 22.932
    },
    {
     "text": "SINGLE",
-    "start": 16.54,
-    "end": 16.861
+    "start": 22.932,
+    "end": 23.253
    },
    {
     "text": "POINT,",
-    "start": 16.861,
-    "end": 17.181
+    "start": 23.253,
+    "end": 23.573
    }
   ]
  },
  {
-  "start": 17.2,
-  "end": 17.56,
+  "start": 23.62,
+  "end": 24.076,
   "words": [
    {
     "text": "AND",
-    "start": 17.2,
-    "end": 17.38
+    "start": 23.62,
+    "end": 23.791
    },
    {
     "text": "SHARE",
-    "start": 17.38,
-    "end": 17.56
+    "start": 23.791,
+    "end": 24.076
    }
   ]
  },
  {
-  "start": 17.56,
-  "end": 18.77,
+  "start": 24.076,
+  "end": 24.889,
   "words": [
    {
     "text": "IT",
-    "start": 17.56,
-    "end": 17.68
+    "start": 24.076,
+    "end": 24.19
    },
    {
     "text": "WITH",
-    "start": 17.68,
-    "end": 17.78
+    "start": 24.19,
+    "end": 24.418
    },
    {
     "text": "ONE",
-    "start": 17.78,
-    "end": 18.02
+    "start": 24.418,
+    "end": 24.589
    },
    {
     "text": "CODE.",
-    "start": 18.02,
-    "end": 18.32
+    "start": 24.589,
+    "end": 24.874
    }
   ]
  },
  {
-  "start": 18.84,
-  "end": 20.58,
+  "start": 25.02,
+  "end": 26.7,
   "words": [
    {
     "text": "GOT",
-    "start": 18.84,
-    "end": 19.02
+    "start": 25.02,
+    "end": 25.12
    },
    {
     "text": "RPG",
-    "start": 19.02,
-    "end": 19.44
+    "start": 25.12,
+    "end": 25.56
    },
    {
     "text": "PLAYER",
-    "start": 19.44,
-    "end": 19.82
+    "start": 25.56,
+    "end": 25.92
    },
    {
     "text": "SKILLS?",
-    "start": 19.82,
-    "end": 20.16
+    "start": 25.92,
+    "end": 26.26
    }
   ]
  },
  {
-  "start": 20.58,
-  "end": 21.26,
+  "start": 26.7,
+  "end": 27.38,
   "words": [
    {
     "text": "YOUR",
-    "start": 20.58,
-    "end": 20.72
+    "start": 26.7,
+    "end": 26.82
    },
    {
     "text": "LEVELS",
-    "start": 20.72,
-    "end": 20.96
+    "start": 26.82,
+    "end": 27.08
    },
    {
     "text": "TURN",
-    "start": 20.96,
-    "end": 21.26
+    "start": 27.08,
+    "end": 27.38
    }
   ]
  },
  {
-  "start": 21.26,
-  "end": 22.55,
+  "start": 27.38,
+  "end": 28.61,
   "words": [
    {
     "text": "INTO",
-    "start": 21.26,
-    "end": 21.5
+    "start": 27.38,
+    "end": 27.62
    },
    {
     "text": "SKILL",
-    "start": 21.5,
-    "end": 21.72
+    "start": 27.62,
+    "end": 27.84
    },
    {
     "text": "POINTS.",
-    "start": 21.72,
-    "end": 22.1
+    "start": 27.84,
+    "end": 28.16
    }
   ]
  },
  {
-  "start": 27.16,
-  "end": 27.44,
+  "start": 34.44,
+  "end": 34.72,
   "words": [
    {
     "text": "SEND",
-    "start": 27.16,
-    "end": 27.26
+    "start": 34.44,
+    "end": 34.54
    },
    {
     "text": "THIS",
-    "start": 27.26,
-    "end": 27.44
+    "start": 34.54,
+    "end": 34.72
    }
   ]
  },
  {
-  "start": 27.44,
-  "end": 27.94,
+  "start": 34.72,
+  "end": 35.22,
   "words": [
    {
     "text": "TO",
-    "start": 27.44,
-    "end": 27.58
+    "start": 34.72,
+    "end": 34.86
    },
    {
     "text": "THE",
-    "start": 27.58,
-    "end": 27.7
+    "start": 34.86,
+    "end": 34.98
    },
    {
     "text": "FRIEND",
-    "start": 27.7,
-    "end": 27.94
+    "start": 34.98,
+    "end": 35.22
    }
   ]
  },
  {
-  "start": 27.94,
-  "end": 29.67,
+  "start": 35.22,
+  "end": 36.93,
   "words": [
    {
     "text": "WHO",
-    "start": 27.94,
-    "end": 28.34
+    "start": 35.22,
+    "end": 35.64
    },
    {
     "text": "ALWAYS",
-    "start": 28.34,
-    "end": 28.64
+    "start": 35.64,
+    "end": 35.92
    },
    {
     "text": "PLAYS",
-    "start": 28.64,
-    "end": 28.96
+    "start": 35.92,
+    "end": 36.24
    },
    {
     "text": "MAGE.",
-    "start": 28.96,
-    "end": 29.22
+    "start": 36.24,
+    "end": 36.48
    }
   ]
  }

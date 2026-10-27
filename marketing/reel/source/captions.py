@@ -1,7 +1,8 @@
 """Word-timed caption chunks: script words (exact spelling) timed by the Whisper word timestamps."""
 import json, re
-T = json.load(open("/tmp/claude-0/reel/timeline.json"))
-W = json.load(open("/tmp/claude-0/reel/words.json"))
+T = json.load(open("/tmp/claude-0/reel2/edit/timeline.json"))
+W = json.load(open("/tmp/claude-0/reel2/edit/words.json"))
+CUTS = [x["start"] for x in json.load(open("/tmp/claude-0/reel2/edit/edl.json"))["shots"][1:]]
 SKIP = {2, 5, 13, 14}          # shown as big graphics instead (522 counter, 30 counter, loader pills, title card)
 MAXW = {0: 3, 15: 3}
 chunks = []
@@ -37,7 +38,12 @@ out = []
 for i, c in enumerate(chunks):
     nxt = chunks[i + 1][0]["start"] if i + 1 < len(chunks) else c[-1]["end"] + 0.6
     end = min(c[-1]["end"] + 0.45, nxt)
+    # never run into the next voice line (even one shown as a graphic) or across a cut
+    later = [l["start"] for l in T["lines"] if l["start"] > c[-1]["end"]]
+    if later:
+        end = min(end, later[0] - 0.03)
+    end = min([end] + [cut for cut in CUTS if c[-1]["end"] < cut < end])
     out.append({"start": c[0]["start"], "end": round(end, 3), "words": c})
-json.dump(out, open("/tmp/claude-0/reel/captions.json", "w"), indent=1)
+json.dump(out, open("/tmp/claude-0/reel2/edit/captions.json", "w"), indent=1)
 for c in out:
     print(f'{c["start"]:6.2f}-{c["end"]:6.2f}  ' + " ".join(w["text"] for w in c["words"]))

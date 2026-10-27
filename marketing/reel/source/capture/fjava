@@ -1,0 +1,4 @@
+#!/bin/bash
+# java under libfaketime; speed from $SLOW (default 0.1)
+export FAKETIME="+0 x${SLOW:-0.1}" FAKETIME_DONT_FAKE_MONOTONIC=0 LD_PRELOAD=/usr/lib/x86_64-linux-gnu/faketime/libfaketimeMT.so.1
+exec /usr/lib/jvm/java-21-openjdk-amd64/bin/java "$@"
