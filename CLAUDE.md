@@ -1,0 +1,35 @@
+# Notes for Claude
+
+## Videos (reels, trailers, shorts): the owner's standing rules
+
+### Voiceover: always the NightBeam channel voice
+
+Owner, 2026-10-27: "save that voice for all future videos i ask for".
+
+- Every voiceover uses the channel voice "gamer": Chatterbox (MIT) cloning `voice/channel_ref.wav` with the runner
+  `voice/chatterbox_tts.py`, both in the private repo `MeherBenSalem/moneymaker` (its `CHANNEL.md` → "The channel
+  voice"). Attach that repo read-only to get them. The settings are fixed: `exaggeration=0.55, cfg_weight=0.3,
+  temperature=0.7`, seed `1000 × take + line number`. Never copy the reference clip into a public repository.
+- Never Kokoro (rejected twice: "way too AI generated", then "sleepy"), ElevenLabs or any paid TTS, or a real
+  person's voice. Never speed up or time-stretch narration: time the edit around the real line lengths instead
+  (Chatterbox reads about 1.3× longer than Kokoro).
+- Energetic, never sleepy: punchy lines, exclamation marks on hype lines, numbers written out ("three thousand and
+  one"), invented names spelled so they are read right ("Chrono Fall"). One-word lines often come out garbled, so give
+  them more takes.
+- Generate 4 takes of every line, run [`marketing/voice/pick_takes.py`](marketing/voice/pick_takes.py) (right words,
+  right pitch, then the most energetic read), and generate takes 5–8 only for lines it reports with no good take.
+- Setup: `python3 -m venv /home/user/ttsvenv && /home/user/ttsvenv/bin/pip install torch==2.6.0 torchaudio==2.6.0
+  --index-url https://download.pytorch.org/whl/cpu && /home/user/ttsvenv/bin/pip install chatterbox-tts faster-whisper`.
+  About 70 s of CPU per line: generate with the game closed.
+- Mix: the voice gets only the channel narration chain,
+  `highpass=f=75,equalizer=f=3500:t=q:w=1:g=1.5,deesser=i=0.35,acompressor=threshold=-20dB:ratio=2.5:attack=10:release=120`,
+  and the music is sidechain-ducked under it.
+- A worked example (plan with a fit check, takes, mix) is the Chronofall reel in `MeherBenSalem/TheYear3001`,
+  `marketing/reel/`.
+
+### Footage: always smooth
+
+Owner: "make sure always video smooth no lag". Record with both game processes on a clock slowed 10× (libfaketime) so
+every rendered frame is kept, sample by game time with cross-fades, never play gameplay slower than real time
+(particles update on ticks and would judder), and check the final video has no repeated frames. The pipeline is in
+`marketing/reel/README.md` and `marketing/reel/source/`.
