@@ -27,6 +27,15 @@ Owner, 2026-10-27: "save that voice for all future videos i ask for".
 - A worked example (plan with a fit check, takes, mix) is the Chronofall reel in `MeherBenSalem/TheYear3001`,
   `marketing/reel/`.
 
+### Sound: production quality, never placeholders
+
+Owner, 2026-10-27, on synthesized effects: "they feel way to gimmicky ... put better quality audio production ready
+and not placeholders". Use real recorded sound effects from a library whose licence allows commercial use in videos
+(the Chronofall reel uses Mixkit's free sound effects: no attribution required; `marketing/reel/source/fetch_sfx.sh`
+and `sfx_pro.py` in `MeherBenSalem/TheYear3001` show the method). Layer cinematic impacts, explosions and whooshes,
+skip anything labelled arcade, 8-bit or cartoon, measure each recording's hit and land it on its frame, and mix in
+stereo under the voice. Never synthesize effects as stand-ins.
+
 ### Footage: always smooth
 
 Owner: "make sure always video smooth no lag". Record with both game processes on a clock slowed 10× (libfaketime) so
