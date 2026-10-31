@@ -46,12 +46,26 @@ public class SkillTreeScreen extends Screen implements TreeView.Host {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean doubleClick) {
-        return view.mouseClicked(event.x(), event.y(), event.button());
+        return view.mouseClicked(event.x(), event.y(), toGlfwButton(event.button()));
     }
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        return view.mouseReleased(event.x(), event.y(), event.button());
+        return view.mouseReleased(event.x(), event.y(), toGlfwButton(event.button()));
+    }
+
+    /** 26.3 numbers mouse buttons like SDL (left 1, middle 2, right 3); TreeView speaks GLFW (left 0, right 1, middle 2). */
+    static int toGlfwButton(int button) {
+        if (button == InputConstants.MOUSE_BUTTON_LEFT) {
+            return 0;
+        }
+        if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
+            return 1;
+        }
+        if (button == InputConstants.MOUSE_BUTTON_MIDDLE) {
+            return 2;
+        }
+        return -1;
     }
 
     @Override
