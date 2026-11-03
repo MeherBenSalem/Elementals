@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.2
+
+- The bundled licence file is now `LICENSE_elementals`; its old name contained `|`, which Windows and
+  Android cannot store, so unpacking or scanning the jar there could fail
+
+See [patchnotes/2.0.2.md](patchnotes/2.0.2.md).
+
 ## 2.0.1
 
 - Fixed the skill tree ignoring left clicks on Minecraft 26.3 (Fabric and NeoForge): 26.3 reports
