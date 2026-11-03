@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1
+
+- Fixed the skill tree ignoring left clicks on Minecraft 26.3 (Fabric and NeoForge): 26.3 reports
+  mouse buttons with SDL numbers, which the tree screen now translates ([#1](https://github.com/MeherBenSalem/Elementals/issues/1))
+
+See [patchnotes/2.0.1.md](patchnotes/2.0.1.md).
+
 ## 2.0.0
 
 - Renamed to **Remnants | Skills and Powers** (mod id unchanged: `elementals`)
