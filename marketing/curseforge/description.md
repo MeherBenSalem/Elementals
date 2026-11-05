@@ -1,5 +1,9 @@
 ![Remnants | Skills and Powers 2.0: The Remnant Constellation](https://raw.githubusercontent.com/MeherBenSalem/Elementals/main/marketing/images/banner.png)
 
+**[Discord](https://discord.gg/TJc3CxR4jK) · [The modpack](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy) · [Support NightBeam](https://nightbeam.dev/support) · [NightBeam Pro](https://nightbeam.dev/memberships) · [All projects](https://nightbeam.dev/projects)**
+
+> **Play it in [Remnants: Ashen Legacy](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy)**, NightBeam's story-driven soulslike RPG modpack. It builds Skills and Powers into one rule set with the rest of the Remnants series.
+
 ## A skill tree you can get lost in
 
 **Remnants | Skills and Powers** gives every player a 522-node passive skill tree in six schools of magic, 30 castable abilities and 12 keystones that bend the rules. Plan a path before you spend a point, share your build as a one-line code, then cast from a hotbar of four powers. It works on its own, and links up with **[Remnants | RPG Player Skills](https://modrinth.com/mod/remnants-rpg-stats-skills-progression)** when both are installed.
@@ -17,14 +21,14 @@
 - **522 nodes** around a shared central ring: 54 notables, 30 abilities, 12 keystones and hundreds of minor nodes.
 - **Notable wheels:** each branch passes through rings of six themed nodes around a named notable.
 - **Hybrid bridges** join neighbouring schools, with notables that mix both elements: Plasma Arc, Ionized Flame, Black Ice, Permafrost, Overgrowth and more.
-- **No school is locked.** Neighbouring schools are only three nodes apart, so a Pyromancer can reach Stormcalling's keystones.
+- **No school is locked.** Neighbouring schools are just three nodes apart, so a Pyromancer can reach Stormcalling's keystones.
 - **32 stats:** vanilla attributes (health, armor, melee damage, speed...) plus ability damage, per-element damage, crit, cooldown reduction, area, duration, lifesteal, Essence, damage reduction, evasion, thorns and more. Vanilla stats are real attribute modifiers, so other mods see them.
 
 ![Six Schools](https://raw.githubusercontent.com/MeherBenSalem/Elementals/main/marketing/images/header-schools.png)
 
 ![Choose your origin](https://raw.githubusercontent.com/MeherBenSalem/Elementals/main/marketing/images/card-schools.png)
 
-Your first point picks an origin: one of the six glowing start nodes on the inner ring. From there, path anywhere.
+Your opening point picks an origin: one of the six glowing start nodes on the inner ring. From there, path anywhere.
 
 | School | Element | Abilities |
 | --- | --- | --- |
@@ -139,7 +143,7 @@ Install **Remnants | RPG Player Skills** next to Skills and Powers and they link
 - **Upgrading from Elementals 1.x:** players who chose Fire or Water get the Pyromancy or Tidecalling origin for free, plus 3 bonus points per old elemental level. Old spell cooldowns move into `abilities.json`.
 - **Spell books** still cast Explosive Orb, Ember Shield and Inferno Wave for Pyromancy players who reach each book's level.
 - **Fire and Water Runes**, element seeds and the Fire Golem spawn egg are in the creative tab.
-- No library dependencies. Fabric only needs Fabric API.
+- No library dependencies. Fabric needs just Fabric API.
 
 ![Downloads & Compatibility](https://raw.githubusercontent.com/MeherBenSalem/Elementals/main/marketing/images/header-compatibility.png)
 
@@ -161,13 +165,13 @@ Install **Remnants | RPG Player Skills** next to Skills and Powers and they link
 No. On its own, Skills and Powers gives points from Power levels. With RPG Player Skills installed, RPG levels give the points instead (or as well, with `mode: add`).
 
 **Will my Elementals 1.x world break?**
-No. The mod id is still `elementals`, so items, Fire Golems and worlds load as before, and players are migrated on their first join.
+No. The mod id is still `elementals`, so items, Fire Golems and worlds load as before, and players are migrated when they next join.
 
 **A key does nothing, or does two things.**
 Defaults are I, R, Z, B and H, chosen because vanilla binds none of them on any supported version. Rebind them under **Controls → Remnants | Skills and Powers**.
 
 **Can abilities grief or hurt other players?**
-They never break blocks. They ignore teammates and your pets, and only hit players if the server sets `abilities_hurt_players` to `true`.
+They never break blocks. They ignore teammates and your pets, and never hit players unless the server sets `abilities_hurt_players` to `true`.
 
 **Can I make my own tree?**
 Yes. Edit `skill_tree.json`, set `use_custom_tree` to `true` and run `/powers reload`. A copy of the built-in tree is written to `skill_tree.default.json` for reference.
@@ -214,3 +218,15 @@ Yes. Edit `skill_tree.json`, set `use_custom_tree` to `true` and run `/powers re
 ---
 
 Remnants | Skills and Powers is licensed under Apache-2.0. The Cinzel and EB Garamond fonts used in this artwork are licensed under the SIL Open Font License 1.1.
+
+---
+
+### More from NightBeam Studio
+
+- **[Remnants: Ashen Legacy](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy)**: the story-driven soulslike RPG modpack built on NightBeam's mods
+- **[Premium server plugins](https://nightbeam.dev/store)**: anti-cheat, ranked PvP, SMP setups and more on BuiltByBit
+- **[NightBeam Pro](https://nightbeam.dev/memberships)**: the model library and NightBeam Forge credits, from $5 a month
+- **[Discord](https://discord.gg/TJc3CxR4jK)**: support, bug reports, suggestions and early looks
+- **[Support NightBeam](https://nightbeam.dev/support)**: help keep every mod free
+
+**Follow:** [YouTube](https://www.youtube.com/@nightbeamstudio) · [Instagram](https://www.instagram.com/nightbeamstudio/) · [X](https://x.com/NightBeamLLC) · [Facebook](https://www.facebook.com/profile.php?id=61574823331471) · [Source and issues](https://github.com/MeherBenSalem/Elementals)
