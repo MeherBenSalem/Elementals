@@ -1,8 +1,6 @@
 ![Remnants | Skills and Powers 2.0: The Remnant Constellation](https://raw.githubusercontent.com/MeherBenSalem/Elementals/main/marketing/images/banner.png)
 
-**[Discord](https://discord.gg/TJc3CxR4jK) · [The modpack](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy) · [Support NightBeam](https://nightbeam.dev/support) · [NightBeam Pro](https://nightbeam.dev/memberships) · [All projects](https://nightbeam.dev/projects)**
-
-> **Play it in [Remnants: Ashen Legacy](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy)**, NightBeam's story-driven soulslike RPG modpack. It builds Skills and Powers into one rule set with the rest of the Remnants series.
+**[Discord](https://discord.gg/TJc3CxR4jK) · [Source and issues](https://github.com/MeherBenSalem/Elementals)**
 
 ## A skill tree you can get lost in
 
@@ -221,6 +219,10 @@ Remnants | Skills and Powers is licensed under Apache-2.0. The Cinzel and EB Gar
 
 ---
 
+> **Play it in [Remnants: Ashen Legacy](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy)**, NightBeam's story-driven soulslike RPG modpack. It builds Skills and Powers into one rule set with the rest of the Remnants series.
+
+---
+
 ### More from NightBeam Studio
 
 - **[Remnants: Ashen Legacy](https://www.curseforge.com/minecraft/modpacks/remnants-ashen-legacy)**: the story-driven soulslike RPG modpack built on NightBeam's mods
@@ -229,4 +231,4 @@ Remnants | Skills and Powers is licensed under Apache-2.0. The Cinzel and EB Gar
 - **[Discord](https://discord.gg/TJc3CxR4jK)**: support, bug reports, suggestions and early looks
 - **[Support NightBeam](https://nightbeam.dev/support)**: help keep every mod free
 
-**Follow:** [YouTube](https://www.youtube.com/@nightbeamstudio) · [Instagram](https://www.instagram.com/nightbeamstudio/) · [X](https://x.com/NightBeamLLC) · [Facebook](https://www.facebook.com/profile.php?id=61574823331471) · [Source and issues](https://github.com/MeherBenSalem/Elementals)
+**Follow:** [YouTube](https://www.youtube.com/@nightbeamstudio) · [Instagram](https://www.instagram.com/nightbeamstudio/) · [X](https://x.com/NightBeamLLC) · [Facebook](https://www.facebook.com/profile.php?id=61574823331471)
