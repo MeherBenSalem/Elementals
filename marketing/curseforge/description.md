@@ -1,6 +1,6 @@
 ![Remnants | Skills and Powers 2.0: The Remnant Constellation](https://raw.githubusercontent.com/MeherBenSalem/Elementals/main/marketing/images/banner.png)
 
-**[Discord](https://discord.gg/TJc3CxR4jK) · [Source and issues](https://github.com/MeherBenSalem/Elementals)**
+**[Docs](https://nightbeam.dev/docs/remnants-skills-and-powers) · [Discord](https://discord.gg/TJc3CxR4jK) · [Source and issues](https://github.com/MeherBenSalem/Elementals)**
 
 ## A skill tree you can get lost in
 
