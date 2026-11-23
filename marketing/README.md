@@ -8,6 +8,8 @@ Listing copy and artwork for CurseForge and Modrinth. Nothing here ships in the 
 | --- | --- |
 | [`curseforge/description.md`](curseforge/description.md) | Full project description (Markdown; also works on Modrinth) |
 | [`curseforge/summary.txt`](curseforge/summary.txt) | Short project summary (199 characters) |
+| [`modrinth/description.md`](modrinth/description.md) | The Modrinth description, made from the CurseForge copy by `python3 tools/make_modrinth_md.py .` (the screenshots go in the project's Gallery tab instead) |
+| [`modrinth/summary.txt`](modrinth/summary.txt) | The Modrinth summary (the same text) |
 | [`../patchnotes/2.0.0.md`](../patchnotes/2.0.0.md) | File changelog for 2.0.0 (the upload script uses it by default) |
 
 Image links in the description point at `raw.githubusercontent.com/MeherBenSalem/Elementals/main/marketing/images/...`, so they work once this folder is on `main`. To host on CurseForge instead, upload the images to the project gallery and replace each URL.
@@ -16,10 +18,12 @@ The project title on both sites should become **Remnants | Skills and Powers**. 
 
 ## Adding a Minecraft version
 
+Only the NightBeam convention's targets are listed: 1.20.1 (Fabric, Forge) and 1.21.1, 26.2, 26.3 (Fabric, NeoForge).
 The supported versions are listed in exactly two places:
 
 1. `VERSIONS` at the top of [`source/render.cjs`](source/render.cjs). Add one line, then rerun the script for `banner`.
-2. The table under **Downloads & Compatibility** in `curseforge/description.md`.
+2. The table under **Downloads & Compatibility** in `curseforge/description.md`. Then run
+   `python3 tools/make_modrinth_md.py .` to refresh the Modrinth copy.
 
 ## Images
 

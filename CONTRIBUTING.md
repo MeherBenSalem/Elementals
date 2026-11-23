@@ -12,7 +12,9 @@ Thanks for contributing to Remnants | Skills and Powers (mod id `elementals`).
 
 1. Fork the repository and create a branch from `main`.
 2. Make the smallest coherent change that solves the problem.
-3. Build the version root you changed from inside that folder, for example `1.20.1/` or `1.21.1/`.
+3. Build the version root you changed from inside that folder (`./gradlew build`: Gradle on Java 21 for `1.20.1/`
+   and `1.21.1/`, Java 25 for `26.2/` and `26.3/`), or all four with `./gradlew buildAll` from the root (the 8
+   loader jars land in `releases/`).
 4. Update documentation when behavior, configuration, or release steps change.
 5. Open a pull request with a clear summary, verification notes, and any compatibility risks.
 

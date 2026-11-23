@@ -1,5 +1,5 @@
 /**
- * Upload Remnants | Skills and Powers jars from all-jars/ to Modrinth + CurseForge.
+ * Upload Remnants | Skills and Powers jars from releases/ (./gradlew buildAll puts them there) to Modrinth + CurseForge.
  * One Modrinth version and one CurseForge file per loader and Minecraft version.
  *
  *   node --test scripts/upload_platforms.test.mjs
@@ -18,7 +18,7 @@ import { CURSEFORGE_ID, JAR_PREFIX, LOADER_IDS, MOD_TITLE, MODRINTH_ID,
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
-const JAR_DIR = path.join(ROOT, "all-jars");
+const JAR_DIR = path.join(ROOT, "releases");
 const RELEASE_STATE_PATH = path.join(ROOT, ".release-upload-state.json");
 
 function loadEnv() {

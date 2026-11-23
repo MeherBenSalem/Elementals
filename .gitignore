@@ -1,21 +1,81 @@
-.gradle
-**/.gradle
-build
-**/build
-all-jars/
-run
-runs
-bin
-out
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Eclipse
+.metadata/
+.settings/
+.classpath
+.project
+bin/
+
+# IntelliJ IDEA
+.idea/
+*.iws
 *.iml
-.idea
-.vscode
+*.ipr
+out/
+
+# VS Code / Cursor
+.vscode/
+*.code-workspace
+.cursor/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+logs/
+*.log
+build_log.txt
+build_output.txt
+dep_warning.txt
+debug.log
+
+# Run folders
+run/
+runs/
+/test/
+
+# Archives / built artifacts (do not commit jars, except the release jars the publish workflow uploads)
+*.jar
+!releases/*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+dist/
+
+# Keep the Gradle wrapper jar
+!**/gradle/wrapper/gradle-wrapper.jar
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+
+# Temp
+input.txt
+output.txt
+
+# Python
+__pycache__/
+
+# This repo
+all-jars/
 .release-upload-state.json
+secrets/
 # Local tooling stays untracked; the shared build helpers below are part of the repo.
 tools/*
 !tools/sync-shared.sh
 !tools/gen_docs.py
 !tools/gen_textures.py
+!tools/make_modrinth_md.py
 marketing/source/.render-*.html
-secrets/
 marketing/reel/*.mp4
