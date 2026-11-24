@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { SUPPORTED_TARGETS, assertCompleteRelease, curseforgeMetadata, curseforgeRelations, modrinthMetadata, parseJar, parseTargets } from "./release_metadata.mjs";
+import { SUPPORTED_TARGETS, assertCompleteRelease, curseforgeMetadata, curseforgeRelations, parseJar, parseTargets } from "./release_metadata.mjs";
 import { collectReleases, parseArgs } from "./upload_platforms.mjs";
 
 const jarName = (target, version = "2.0.0") => {
@@ -26,16 +26,9 @@ test("rejects unknown targets, other mods and version mismatches", () => {
   assert.throws(() => parseJar(jarName("fabric:26.3", "2.0.1"), "2.0.0"));
 });
 
-test("fabric jars require Fabric API; every jar lists RPG Player Skills as optional", () => {
+test("fabric jars require Fabric API on CurseForge", () => {
   for (const target of SUPPORTED_TARGETS) {
     const release = parseJar(jarName(target));
-    const body = modrinthMetadata(release, { version: "2.0.0", changelog: "x" });
-    const types = Object.fromEntries(body.dependencies.map((d) => [d.project_id, d.dependency_type]));
-    assert.equal(types.d85UTOuq, "optional");
-    assert.equal(types.P7dR8mSH, release.loader === "fabric" ? "required" : undefined);
-    assert.deepEqual(body.game_versions, [release.game]);
-    assert.deepEqual(body.loaders, [release.loader]);
-    assert.equal(body.version_number, `2.0.0+${release.loader}-${release.game}`);
     const slugs = curseforgeRelations(release.loader, release.game).projects.map((p) => p.slug);
     assert.deepEqual(slugs, release.loader === "fabric" ? ["fabric-api"] : []);
   }
@@ -73,6 +66,8 @@ test("target filters only accept supported targets", () => {
   assert.deepEqual([...parseTargets("forge:1.20.1, neoforge:26.3")], ["forge:1.20.1", "neoforge:26.3"]);
   assert.throws(() => parseTargets("forge:1.21.1"));
   assert.throws(() => parseArgs(["node", "x", "--version", "2.0.0", "--targets", "forge:1.20.1", "--require-all-targets"]));
-  const args = parseArgs(["node", "x", "--version", "2.0.0", "--curseforge-only", "--targets", "forge:1.20.1"]);
-  assert.ok(args.curseforgeOnly && args.targets.has("forge:1.20.1"));
+  const args = parseArgs(["node", "x", "--version", "2.0.0", "--targets", "forge:1.20.1"]);
+  assert.ok(args.targets.has("forge:1.20.1"));
+  // CurseForge is the only target since 24 Nov 2026: the old platform switches are gone.
+  assert.throws(() => parseArgs(["node", "x", "--version", "2.0.0", "--modrinth-only"]), /Unknown arg/);
 });

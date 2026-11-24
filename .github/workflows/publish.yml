@@ -1,4 +1,4 @@
-# Publish Remnants | Skills and Powers to Modrinth + CurseForge (NightBeam convention).
+# Publish Remnants | Skills and Powers to CurseForge (NightBeam convention: CurseForge only since 24 Nov 2026).
 #
 # Runs only by hand (workflow_dispatch) or on a v*.*.* tag; a push to main never releases anything.
 # Uses exactly the 8 convention jars for the version, in this order of sources:
@@ -6,22 +6,22 @@
 #   2. the jars attached to the GitHub Release v<version>,
 #   3. a build from source: ./gradlew buildAll (the workspaces and VERSION must be at <version>).
 # The run fails unless all 8 are found: 1.20.1 Fabric + Forge; 1.21.1, 26.2 and 26.3 Fabric + NeoForge.
-# scripts/upload_platforms.mjs uploads one Modrinth version and one CurseForge file per loader and Minecraft
-# version (dependencies in scripts/release_metadata.mjs: Fabric API required on Fabric, Remnants | RPG Player
-# Skills optional on Modrinth), with patchnotes/<version>.md as the changelog.
+# scripts/upload_platforms.mjs uploads one CurseForge file per loader and Minecraft version (dependencies in
+# scripts/release_metadata.mjs: Fabric API required on Fabric), with patchnotes/<version>.md as the changelog.
 #
 # Same-day guard (NightBeam convention): scripts/same_day_guard.mjs stops the run if this mod already had a
-# release today (Africa/Tunis day), on Modrinth, CurseForge or an earlier Publish run. A dry run only reports it.
+# release today (Africa/Tunis day), on CurseForge or in an earlier Publish run. A dry run only reports it.
 # It runs before building and again right before the upload, whatever the inputs below say.
 #
-# Repo secrets: MODRINTH_TOKEN, CURSEFORGE_TOKEN, CURSEFORGE_API_KEY
-# Repo variables: MODRINTH_ID (RFO8VXZx), CURSEFORGE_ID (1228643); the workflow falls back to these IDs if the
-# variables are unset (the same defaults as scripts/release_metadata.mjs)
+# Repo secrets: CURSEFORGE_TOKEN (upload token), CURSEFORGE_API_KEY (Core API key, for the same-day guard)
+# Repo variable: CURSEFORGE_ID (1228643); the workflow falls back to this ID if the variable is unset (the same
+# default as scripts/release_metadata.mjs)
+# The existing Modrinth project stays up as it is but gets no new versions.
 #
 # Prove it first:  gh workflow run publish.yml -f version=2.0.2 -f dry_run=true
 # Release:         gh workflow run publish.yml -f version=2.0.2   (or: git tag v2.0.2 && git push origin v2.0.2)
-# To resend files one platform rejected, run it by hand with `platforms` and `targets`, for example
-# platforms=curseforge, targets=forge:1.20.1,neoforge:26.3 (the same-day guard still applies).
+# To resend files CurseForge rejected, run it by hand with `targets`, for example targets=forge:1.20.1,neoforge:26.3
+# (the same-day guard still applies).
 
 name: Publish
 
@@ -38,10 +38,6 @@ on:
         description: Skip uploads if true
         required: false
         default: "false"
-      platforms:
-        description: "both, modrinth or curseforge (the same-day guard still applies)"
-        required: false
-        default: "both"
       targets:
         description: "Only these loader:minecraft targets, comma separated (empty = all eight); the same-day guard still applies"
         required: false
@@ -85,12 +81,11 @@ jobs:
 
       - name: Same-day guard
         env:
-          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'RFO8VXZx' }}
           CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1228643' }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
           PUBLISH_WORKFLOW: publish.yml
-          UPLOAD_STEP: Upload to Modrinth + CurseForge
+          UPLOAD_STEP: Upload CurseForge|Upload Modrinth + CurseForge|Upload to Modrinth + CurseForge
           DRY_RUN: ${{ inputs.dry_run }}
         run: node scripts/same_day_guard.mjs
 
@@ -181,19 +176,12 @@ jobs:
         shell: bash
         env:
           VERSION: ${{ steps.ver.outputs.version }}
-          PLATFORMS: ${{ inputs.platforms }}
           TARGETS: ${{ inputs.targets }}
         run: |
           set -euo pipefail
           # Exactly the 8 convention jars, one per loader + Minecraft pair, or the run stops here.
           python3 scripts/check_targets.py jars --version "$VERSION" --dir dist --list-file jar-list.txt
           args=()
-          case "${PLATFORMS:-both}" in
-            both) ;;
-            modrinth) args+=(--modrinth-only) ;;
-            curseforge) args+=(--curseforge-only) ;;
-            *) echo "::error::platforms must be both, modrinth or curseforge" >&2; exit 1 ;;
-          esac
           TARGETS="${TARGETS// /}"
           if [[ -n "$TARGETS" ]]; then
             if [[ ! "$TARGETS" =~ ^[a-z]+:[0-9.]+(,[a-z]+:[0-9.]+)*$ ]]; then
@@ -213,7 +201,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          # Parses every jar name (loader + Minecraft version) and prints the metadata; never calls either API.
+          # Parses every jar name (loader + Minecraft version) and prints the metadata; never calls the API.
           # shellcheck disable=SC2086
           node scripts/upload_platforms.mjs --version "$VERSION" --jar-dir dist $UPLOAD_ARGS --dry-run
 
@@ -225,28 +213,25 @@ jobs:
       - name: Same-day guard (again, right before upload)
         if: ${{ inputs.dry_run != 'true' }}
         env:
-          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'RFO8VXZx' }}
           CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1228643' }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
           GITHUB_TOKEN: ${{ github.token }}
           PUBLISH_WORKFLOW: publish.yml
-          UPLOAD_STEP: Upload to Modrinth + CurseForge
+          UPLOAD_STEP: Upload CurseForge|Upload Modrinth + CurseForge|Upload to Modrinth + CurseForge
           DRY_RUN: ${{ inputs.dry_run }}
         run: node scripts/same_day_guard.mjs
 
-      - name: Upload to Modrinth + CurseForge
+      - name: Upload CurseForge
         if: ${{ inputs.dry_run != 'true' }}
         env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
           CURSEFORGE_API_KEY: ${{ secrets.CURSEFORGE_API_KEY }}
-          MODRINTH_ID: ${{ vars.MODRINTH_ID || 'RFO8VXZx' }}
           CURSEFORGE_ID: ${{ vars.CURSEFORGE_ID || '1228643' }}
           VERSION: ${{ steps.ver.outputs.version }}
           UPLOAD_ARGS: ${{ steps.opts.outputs.args }}
         shell: bash
         run: |
           set -euo pipefail
-          test -n "${MODRINTH_ID:-}" && test -n "${CURSEFORGE_ID:-}"
+          test -n "${CURSEFORGE_ID:-}" || { echo "Set the repo variable CURSEFORGE_ID" >&2; exit 1; }
           # shellcheck disable=SC2086
           node scripts/upload_platforms.mjs --version "$VERSION" --jar-dir dist $UPLOAD_ARGS

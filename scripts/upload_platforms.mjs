@@ -1,11 +1,12 @@
 /**
- * Upload Remnants | Skills and Powers jars from releases/ (./gradlew buildAll puts them there) to Modrinth + CurseForge.
- * One Modrinth version and one CurseForge file per loader and Minecraft version.
+ * Upload Remnants | Skills and Powers jars from releases/ (./gradlew buildAll puts them there) to CurseForge.
+ * One CurseForge file per loader and Minecraft version. NightBeam publishes to CurseForge only (since 24 Nov 2026);
+ * the existing Modrinth project stays up as it is but gets no new versions.
  *
  *   node --test scripts/upload_platforms.test.mjs
  *   node scripts/upload_platforms.mjs --version 2.0.0 --dry-run
  *   node scripts/upload_platforms.mjs --version 2.0.0 --require-all-targets
- *   node scripts/upload_platforms.mjs --version 2.0.0 --curseforge-only --targets forge:1.20.1,neoforge:26.3
+ *   node scripts/upload_platforms.mjs --version 2.0.0 --targets forge:1.20.1,neoforge:26.3
  *
  * The changelog defaults to patchnotes/<version>.md. Uploads already recorded in
  * .release-upload-state.json are skipped, so a failed run can be resumed.
@@ -13,8 +14,8 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
-import { CURSEFORGE_ID, JAR_PREFIX, LOADER_IDS, MOD_TITLE, MODRINTH_ID,
-  assertCompleteRelease, curseforgeMetadata, modrinthMetadata, normalizeVersion, parseJar, parseTargets } from "./release_metadata.mjs";
+import { CURSEFORGE_ID, JAR_PREFIX, LOADER_IDS, MOD_TITLE,
+  assertCompleteRelease, curseforgeMetadata, normalizeVersion, parseJar, parseTargets } from "./release_metadata.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
@@ -39,7 +40,7 @@ function loadEnv() {
 }
 
 export function parseArgs(argv) {
-  const out = { curseforgeOnly: false, modrinthOnly: false, dryRun: false, requireAllTargets: false, jarDir: JAR_DIR };
+  const out = { dryRun: false, requireAllTargets: false, jarDir: JAR_DIR };
   for (let i = 2; i < argv.length; i++) {
     const a = argv[i];
     if (["--version", "--changelog-file", "--jar-dir", "--targets"].includes(a)) {
@@ -49,15 +50,12 @@ export function parseArgs(argv) {
       else if (a === "--changelog-file") out.changelogFile = value;
       else if (a === "--targets") out.targets = parseTargets(value);
       else out.jarDir = path.resolve(value);
-    } else if (a === "--curseforge-only") out.curseforgeOnly = true;
-    else if (a === "--modrinth-only") out.modrinthOnly = true;
-    else if (a === "--require-all-targets") out.requireAllTargets = true;
+    } else if (a === "--require-all-targets") out.requireAllTargets = true;
     else if (a === "--dry-run") out.dryRun = true;
     else throw new Error(`Unknown arg ${a}`);
   }
   out.version = normalizeVersion(out.version);
   if (out.targets && out.requireAllTargets) throw new Error("--targets and --require-all-targets cannot be combined");
-  if (out.curseforgeOnly && out.modrinthOnly) throw new Error("--curseforge-only and --modrinth-only cannot be combined");
   return out;
 }
 
@@ -115,25 +113,6 @@ async function postWithRetry(url, init, label) {
   }
 }
 
-async function uploadModrinth(releases, version, changelog, state) {
-  const projectId = process.env.MODRINTH_ID || MODRINTH_ID;
-  for (const release of releases) {
-    if (recorded(state, "modrinth", version, release)) {
-      console.log("Modrinth skip", release.name);
-      continue;
-    }
-    const data = modrinthMetadata(release, { version, changelog, projectId });
-    const id = await postWithRetry("https://api.modrinth.com/v2/version", () => {
-      const form = new FormData();
-      form.append("data", JSON.stringify(data));
-      form.append("file_0", new Blob([fs.readFileSync(release.jar)]), release.name);
-      return { method: "POST", headers: { Authorization: process.env.MODRINTH_TOKEN }, body: form };
-    }, `Modrinth ${release.name}`);
-    record(state, "modrinth", version, release, id);
-    console.log("Modrinth OK", data.version_number);
-  }
-}
-
 async function uploadCurseForge(releases, version, changelog, state) {
   const projectId = process.env.CURSEFORGE_ID || CURSEFORGE_ID;
   const token = process.env.CURSEFORGE_TOKEN;
@@ -171,7 +150,7 @@ async function main() {
   let releases = collectReleases(args.jarDir, version);
   if (args.requireAllTargets) assertCompleteRelease(releases);
   if (args.targets) {
-    // Re-run part of a release, for example the files one platform rejected.
+    // Re-run part of a release, for example the files CurseForge rejected.
     releases = releases.filter((r) => args.targets.has(`${r.loader}:${r.game}`));
     if (releases.length !== args.targets.size) throw new Error("A requested target has no jar");
   }
@@ -179,21 +158,17 @@ async function main() {
   console.log(`${MOD_TITLE} ${version}: ${releases.length} jars`);
   for (const r of releases) console.log(" ", r.name, "->", r.loader, r.game);
   if (args.dryRun) {
-    // A preview never loads secrets, reads jar bytes or calls either API.
+    // A preview never loads secrets, reads jar bytes or calls the API.
     for (const r of releases) {
-      if (!args.curseforgeOnly) console.log("[dry-run] Modrinth", JSON.stringify(modrinthMetadata(r, { version, changelog: "…" })));
-      if (!args.modrinthOnly) console.log("[dry-run] CurseForge", JSON.stringify(curseforgeMetadata(r, { version, changelog: "…", gameVersionIds: [] })));
+      console.log("[dry-run] CurseForge", JSON.stringify(curseforgeMetadata(r, { version, changelog: "…", gameVersionIds: [] })));
     }
     return;
   }
   loadEnv();
-  const { MODRINTH_TOKEN, CURSEFORGE_TOKEN } = process.env;
-  if ((!args.curseforgeOnly && !MODRINTH_TOKEN) || (!args.modrinthOnly && !CURSEFORGE_TOKEN)) {
-    throw new Error("Set MODRINTH_TOKEN and CURSEFORGE_TOKEN");
-  }
+  if (!process.env.CURSEFORGE_TOKEN) throw new Error("Set CURSEFORGE_TOKEN");
+  if (!(process.env.CURSEFORGE_ID || CURSEFORGE_ID)) throw new Error("Set CURSEFORGE_ID");
   const state = loadState();
-  if (!args.curseforgeOnly) await uploadModrinth(releases, version, changelog, state);
-  if (!args.modrinthOnly) await uploadCurseForge(releases, version, changelog, state);
+  await uploadCurseForge(releases, version, changelog, state);
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] || "").href) {

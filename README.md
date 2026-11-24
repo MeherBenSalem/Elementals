@@ -67,12 +67,12 @@ Shared, version-independent code is edited in `1.21.1/` and copied to the other 
 ## Releasing
 
 CI (`.github/workflows/ci.yml`) builds all 8 jars on every push to `main` that touches the build. Publishing to
-Modrinth and CurseForge is `.github/workflows/publish.yml`, run by hand (`version`, `dry_run`) or by a `v*.*.*` tag;
+CurseForge is `.github/workflows/publish.yml`, run by hand (`version`, `dry_run`) or by a `v*.*.*` tag;
 it never runs on a plain push. It refuses a second release of the mod on the same day (Africa/Tunis), takes the jars
 from `releases/`, the GitHub Release or a build from source, fails unless exactly the 8 jars are found, and uploads
-one Modrinth version and one CurseForge file per loader and Minecraft version through
-`scripts/upload_platforms.mjs`. It needs the secrets `MODRINTH_TOKEN`, `CURSEFORGE_TOKEN`, `CURSEFORGE_API_KEY` and
-the variables `MODRINTH_ID`, `CURSEFORGE_ID`. Store-page copy and images are in [marketing/](marketing/README.md).
+one CurseForge file per loader and Minecraft version through `scripts/upload_platforms.mjs`. It needs the secrets
+`CURSEFORGE_TOKEN` (upload token) and `CURSEFORGE_API_KEY` (Core API key) and the variable `CURSEFORGE_ID`. NightBeam
+publishes to CurseForge only; the Modrinth page stays up but gets no new versions. Store-page copy and images are in [marketing/](marketing/README.md).
 
 ## Contributing
 

@@ -76,6 +76,5 @@ tools/*
 !tools/sync-shared.sh
 !tools/gen_docs.py
 !tools/gen_textures.py
-!tools/make_modrinth_md.py
 marketing/source/.render-*.html
 marketing/reel/*.mp4
